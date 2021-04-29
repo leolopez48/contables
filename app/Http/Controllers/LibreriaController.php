@@ -17,4 +17,10 @@ class LibreriaController extends Controller
         $iva = $valor / 1.13;
         return $iva;
     }
+
+    public function impuestoRenta($valor)
+    {
+        $renta = $valor * 0.10;
+        return $renta;
+    }
 }
