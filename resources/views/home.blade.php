@@ -21,5 +21,5 @@
     </div>
 </div>
 
-<example />
+<!-- <example :numero="23"/> -->
 @endsection

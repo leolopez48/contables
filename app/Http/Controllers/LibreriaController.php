@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class LibreriaController extends Controller
+class LibreriaController
 {
+    public function __construct()
+    {
+    }
+
     public function calcularIva($valor)
     {
         $iva = $valor * 0.13;

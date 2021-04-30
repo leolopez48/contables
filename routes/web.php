@@ -17,6 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/clientes', function () {
+    return view('Clientes.Cliente');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::post('/iva', [App\Http\Controllers\HomeController::class, 'prueba']);
