@@ -1,12 +1,14 @@
 <template>
   <div class="container">
     <!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
+    <div id="myModal" ref="vueModal" class="modal fade" role="dialog">
       <div class="modal-dialog modal-xl">
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Nuevo Cliente</h5>
+            <h5 class="modal-title" id="exampleModalLabel">
+              {{ titulo }}
+            </h5>
             <button type="button" class="close" data-dismiss="modal">
               &times;
             </button>
@@ -15,15 +17,29 @@
             <div class="row">
               <div v-if="modificar" class="col-md-4">
                 <label for="" class="pt-2">Id</label>
-                <input type="text" disabled class="form-control" />
+                <input
+                  type="text"
+                  disabled
+                  class="form-control"
+                  v-model="cliente.Id"
+                />
               </div>
               <div class="col-md-8 col-sm-12">
                 <label for="" class="pt-2">Nombre</label>
-                <input type="text" class="form-control" />
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="cliente.nombre"
+                />
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">Clasificación</label>
-                <select name="" id="" class="form-control">
+                <select
+                  name=""
+                  id=""
+                  class="form-control"
+                  v-model="cliente.clasificacion"
+                >
                   <option value="ninguno">Ninguno</option>
                   <option value="pequeño">Pequeño</option>
                   <option value="mediano">Mediano</option>
@@ -38,27 +54,40 @@
                   cols="6"
                   rows="4"
                   class="form-control"
+                  v-model="cliente.direccion"
                 ></textarea>
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">NIT</label>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control" v-model="cliente.nit" />
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">NRC</label>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control" v-model="cliente.nrc" />
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">Razón social</label>
-                <input type="text" class="form-control" />
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="cliente.razon_social"
+                />
               </div>
               <div class="col-md-6 col-sm-12">
                 <label for="" class="pt-2">Giro</label>
-                <input type="text" class="form-control" />
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="cliente.giro"
+                />
               </div>
               <div class="col-md-6 col-sm-12">
                 <label for="" class="pt-2">Teléfono</label>
-                <input type="text" class="form-control" />
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="cliente.telefono"
+                />
               </div>
             </div>
           </div>
@@ -66,7 +95,9 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">
               Close
             </button>
-            <button type="button" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-primary" @click="guardar()">
+              Guardar
+            </button>
           </div>
         </div>
       </div>
@@ -117,9 +148,10 @@
               <td>
                 <a
                   href="#"
-                  class="btn btn-secondary"
+                  class="btn btn-secondary mt-1"
                   @click="
                     modificar = true;
+                    abrirModal();
                     editar(cli);
                   "
                   title="Editar"
@@ -130,7 +162,7 @@
                 </a>
                 <a
                   href="#"
-                  class="btn btn-danger"
+                  class="btn btn-danger mt-1"
                   title="Eliminar"
                   @click="eliminar(cli.Id)"
                   ><i class="fas fa-trash"></i
@@ -140,6 +172,8 @@
           </tbody>
         </table>
       </div>
+      <pagination :array="paginacion" />
+      <!-- <jw-pagination></jw-pagination> -->
     </div>
   </div>
 </template>
@@ -147,12 +181,18 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
+import Pagination from "./Pagination.vue";
+// import pagination from "laravel-vue-pagination";
+
 export default {
+  components: { Pagination },
   data() {
     return {
       clientes: Array,
-      modal: 0,
       modificar: false,
+      cliente: {},
+      titulo: String,
+      paginacion: {},
     };
   },
   mounted() {
@@ -161,8 +201,9 @@ export default {
   methods: {
     async init() {
       const res = await axios.get("/api/cliente");
-      this.clientes = res.data.clientes;
-      console.log(res);
+      this.clientes = res.data.clientes.data;
+      this.paginacion = res.data.clientes;
+      //   console.log(this.paginacion);
     },
     async eliminar(id) {
       const resultado = await Swal.fire({
@@ -177,7 +218,6 @@ export default {
 
       if (resultado.isConfirmed) {
         const res = await axios.delete("/api/cliente/" + id);
-        // console.log(res);
         if (res.data.mensaje == "correcto") {
           Swal.fire({
             title: "Eliminación exitosa.",
@@ -189,13 +229,56 @@ export default {
         this.init();
       }
     },
-    async editar(id) {
-      const res = await axios.put("/api/cliente/" + id);
-      console.log(res);
-      this.init();
+    async editar(cliente) {
+      this.cliente = cliente;
+    },
+    async guardar() {
+      if (this.modificar) {
+        const res = await axios.put(
+          "/api/cliente/" + this.cliente.Id,
+          this.cliente
+        );
+
+        if (res.data.mensaje == "correcto") {
+          Swal.fire({
+            title: "Modificación exitosa.",
+            text: "El cliente se ha modificado.",
+            icon: "success",
+            confirmButtonText: "Cool",
+          });
+        }
+      } else {
+        //Insertar
+        const res = await axios.post("/api/cliente/", {
+          cliente: cliente,
+        });
+        if (res.data.mensaje == "correcto") {
+          Swal.fire({
+            title: "Eliminación exitosa.",
+            text: "El cliente se ha eliminado.",
+            icon: "success",
+            confirmButtonText: "Hecho",
+          });
+        }
+      }
+      $(this.$refs.vueModal).modal("hide");
+      await this.init();
     },
     abrirModal() {
-      this.modal = 1;
+      this.cliente = {};
+      if (this.modificar) {
+        this.titulo = "Modificar Cliente";
+      } else {
+        this.titulo = "Nuevo Cliente";
+      }
+    },
+    json2array(json) {
+      var result = [];
+      var keys = Object.keys(json);
+      keys.forEach(function (key) {
+        result.push(json[key]);
+      });
+      return result;
     },
   },
 };

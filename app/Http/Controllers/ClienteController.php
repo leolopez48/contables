@@ -16,7 +16,7 @@ class ClienteController extends Controller
     public function index()
     {
         try {
-            $clientes = DB::table('cliente')->get();
+            $clientes = Cliente::paginate(5);
             return response()->json(['mensaje'=>'correcto', 'clientes'=>$clientes]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
@@ -31,7 +31,8 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $cliente = new Cliente();
+        $cliente->create($request->all());
     }
 
     /**
@@ -42,7 +43,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        //
+        dd($cliente);
     }
 
     /**
@@ -54,7 +55,12 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        $cliente->update($request->all());
+        try {
+            Cliente::where('Id', $cliente->Id)->update($request->all());
+            return response()->json(["mensaje"=>"correcto"]);
+        } catch (\Throwable $th) {
+            return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
+        }
     }
 
     /**
@@ -66,7 +72,7 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         try {
-            //$borrado = DB::table('cliente')->where(['Id'=>$cliente])->delete();
+            Cliente::where('Id', $cliente->Id)->delete();
             return response()->json(['mensaje'=>'correcto']);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);

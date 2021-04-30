@@ -20,8 +20,13 @@ window.Vue = require('vue').default;
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import ClienteComponent from "./components/Cliente.vue";
+import PaginationComponent from "./components/Pagination.vue";
+// import JwPagination from 'jw-vue-pagination';
 
 Vue.component('cliente', ClienteComponent);
+Vue.component('pagination', PaginationComponent);
+// Vue.component('jw-pagination', JwPagination);
+Vue.component('pagination-vue', require('laravel-vue-pagination'));
 // Vue.component('example', require('./components/ExampleComponent.vue'));
 
 /**

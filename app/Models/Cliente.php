@@ -22,4 +22,8 @@ class Cliente extends Model
         'giro',
         'telefono',
     ];
+
+    public $timestamps = false;
+
+    protected $dateFormat = 'U';
 }

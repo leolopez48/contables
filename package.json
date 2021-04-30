@@ -25,6 +25,8 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "jw-vue-pagination": "^1.0.3",
+        "laravel-vue-pagination": "^2.3.1",
         "sweetalert2": "^10.16.6"
     }
 }
