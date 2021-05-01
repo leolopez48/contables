@@ -21,24 +21,30 @@
                   type="text"
                   disabled
                   class="form-control"
-                  v-model="cliente.Id"
+                  v-model="proveedor.Id"
                 />
               </div>
+
               <div class="col-md-8 col-sm-12">
-                <label for="" class="pt-2">Nombre</label>
-                <input
-                  type="text"
+                <label for="" class="pt-2">Tipo</label>
+                <select
+                  name=""
+                  id=""
                   class="form-control"
-                  v-model="cliente.nombre"
-                />
+                  v-model="proveedor.tipo"
+                >
+                  <option value="local">Local</option>
+                  <option value="extranjero">Extranjero</option>
+                </select>
               </div>
+
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">Clasificación</label>
                 <select
                   name=""
                   id=""
                   class="form-control"
-                  v-model="cliente.clasificacion"
+                  v-model="proveedor.clasificacion"
                 >
                   <option value="ninguno">Ninguno</option>
                   <option value="pequeño">Pequeño</option>
@@ -54,39 +60,42 @@
                   cols="6"
                   rows="4"
                   class="form-control"
-                  v-model="cliente.direccion"
+                  v-model="proveedor.direccion"
                 ></textarea>
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">NIT</label>
-                <input type="text" class="form-control" v-model="cliente.nit" />
+                <input type="text" class="form-control" v-model="proveedor.nit" />
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">NRC</label>
-                <input type="text" class="form-control" v-model="cliente.nrc" />
+                <input type="text" class="form-control" v-model="proveedor.nrc" />
               </div>
+
               <div class="col-md-4 col-sm-12">
+                <label for="" class="pt-2">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="proveedor.nombre"
+                />
+              </div>
+
+              <div class="col-md-6 col-sm-12">
                 <label for="" class="pt-2">Razón social</label>
                 <input
                   type="text"
                   class="form-control"
-                  v-model="cliente.razon_social"
+                  v-model="proveedor.razon_social"
                 />
               </div>
-              <div class="col-md-6 col-sm-12">
-                <label for="" class="pt-2">Giro</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="cliente.giro"
-                />
-              </div>
-              <div class="col-md-6 col-sm-12">
+              
+              <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">Teléfono</label>
                 <input
                   type="text"
                   class="form-control"
-                  v-model="cliente.telefono"
+                  v-model="proveedor.telefono"
                 />
               </div>
             </div>
@@ -117,34 +126,36 @@
         ><i class="fas fa-plus" title="Agregar"></i
       ></a>
     </div>
-    <div v-if="clientes">
+    
+  ...
+    <div v-if="proveedores">
       <div class="table-responsive">
-        <table class="table table-stripped table-hover">
-          <thead>
+        <table class="table table-ligth table-hover">
+          <thead class="primeraFila" >
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Nombre</th>
+              <th scope="col">Tipo</th>
               <th scope="col">Clasificación</th>
-              <th scope="col">Dirección</th>
               <th scope="col">NIT</th>
               <th scope="col">NRC</th>
+              <th scope="col">Nombre</th>
               <th scope="col">Razón social</th>
-              <th scope="col">Giro</th>
+              <th scope="col">Dirección</th>
               <th scope="col">Teléfono</th>
               <th scope="col">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="cli in clientes" :key="cli.Id">
-              <td>{{ cli.Id }}</td>
-              <td>{{ cli.nombre }}</td>
-              <td>{{ cli.clasificacion }}</td>
-              <td>{{ cli.direccion }}</td>
-              <td>{{ cli.nit }}</td>
-              <td>{{ cli.nrc }}</td>
-              <td>{{ cli.razon_social }}</td>
-              <td>{{ cli.giro }}</td>
-              <td>{{ cli.telefono }}</td>
+            <tr v-for="pro in proveedores" :key="pro.Id">
+              <td>{{ pro.Id }}</td>
+              <td>{{ pro.tipo }}</td>
+              <td>{{ pro.clasificacion }}</td>
+              <td>{{ pro.nit }}</td>
+              <td>{{ pro.nrc }}</td>
+              <td>{{ pro.nombre }}</td>
+              <td>{{ pro.razon_social }}</td>
+              <td>{{ pro.direccion }}</td>
+              <td>{{ pro.telefono }}</td>
               <td>
                 <a
                   href="#"
@@ -152,7 +163,7 @@
                   @click="
                     modificar = true;
                     abrirModal();
-                    editar(cli);
+                    editar(pro);
                   "
                   title="Editar"
                   data-toggle="modal"
@@ -164,7 +175,7 @@
                   href="#"
                   class="btn btn-danger mt-1"
                   title="Eliminar"
-                  @click="eliminar(cli.Id)"
+                  @click="eliminar(pro.Id)"
                   ><i class="fas fa-trash"></i
                 ></a>
               </td>
@@ -188,9 +199,9 @@ export default {
   components: { Pagination },
   data() {
     return {
-      clientes: Array,
+      proveedores: Array,
       modificar: false,
-      cliente: {},
+      proveedor: {},
       titulo: String,
       paginacion: {},
     };
@@ -200,9 +211,9 @@ export default {
   },
   methods: {
     async init() {
-      const res = await axios.get("/api/cliente");
-      this.clientes = res.data.clientes.data;
-      this.paginacion = res.data.clientes;
+      const res = await axios.get("/api/proveedor");
+      this.proveedores = res.data.proveedores.data;
+      this.paginacion = res.data.proveedores;
       //   console.log(this.paginacion);
     },
     async eliminar(id) {
@@ -217,11 +228,11 @@ export default {
       });
 
       if (resultado.isConfirmed) {
-        const res = await axios.delete("/api/cliente/" + id);
+        const res = await axios.delete("/api/proveedor/" + id);
         if (res.data.mensaje == "correcto") {
           Swal.fire({
             title: "Eliminación exitosa.",
-            text: "El cliente se ha eliminado.",
+            text: "El proveedor se ha eliminado.",
             icon: "success",
             confirmButtonText: "Cool",
           });
@@ -229,34 +240,34 @@ export default {
         this.init();
       }
     },
-    async editar(cliente) {
-      this.cliente = cliente;
+    async editar(proveedor) {
+      this.proveedor = proveedor;
     },
     async guardar() {
       if (this.modificar) {
         const res = await axios.put(
-          "/api/cliente/" + this.cliente.Id,
-          this.cliente
+          "/api/proveedor/" + this.proveedor.Id,
+          this.proveedor
         );
 
         if (res.data.mensaje == "correcto") {
           Swal.fire({
             title: "Modificación exitosa.",
-            text: "El cliente se ha modificado.",
+            text: "El proveedor se ha modificado.",
             icon: "success",
-            confirmButtonText: "Cool",
+            confirmButtonText: "Okay",
           });
         }
       } else {
         //Insertar
-        const res = await axios.post("/api/cliente/", 
-           this.cliente,
+        const res = await axios.post("/api/proveedor/", 
+           this.proveedor,
         );
         console.log(res.data);
         if (res.data.mensaje == "correcto") {
           Swal.fire({
             title: "Eliminación exitosa.",
-            text: "El cliente se ha eliminado.",
+            text: "El proveedor se ha eliminado.",
             icon: "success",
             confirmButtonText: "Hecho",
           });
@@ -266,11 +277,11 @@ export default {
       await this.init();
     },
     abrirModal() {
-      this.cliente = {};
+      this.proveedor = {};
       if (this.modificar) {
-        this.titulo = "Modificar Cliente";
+        this.titulo = "Modificar proveedor";
       } else {
-        this.titulo = "Nuevo Cliente";
+        this.titulo = "Nuevo proveedor";
       }
     },
     json2array(json) {
@@ -289,4 +300,10 @@ export default {
 .modal-xl {
   width: 60%;
 }
+
+.primeraFila {
+  background: #343A40;
+  color: white;
+}
+
 </style>

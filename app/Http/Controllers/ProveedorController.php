@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use DB;
 
-class ClienteController extends Controller
+class ProveedorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class ClienteController extends Controller
     public function index()
     {
         try {
-            $clientes = Cliente::paginate(5);
-            return response()->json(['mensaje'=>'correcto', 'clientes'=>$clientes]);
+            $proveedores = Proveedor::paginate(5);
+            return response()->json(['mensaje'=>'correcto', 'proveedores'=>$proveedores]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
         }
@@ -31,36 +31,36 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $cliente = new Cliente();
-        $id=DB::table('cliente')->latest('Id')->first();
-        $cliente->Id = $id;
-        $cliente->nombre= $request->nombre;
-        $cliente->create($request->all());
-        return response()->json(['cliente'=>$request->all()]);
+        $proveedor = new Proveedor();
+        $id=DB::table('proveedor')->latest('Id')->first();
+        $proveedor->Id = $id;
+        $proveedor->nombre= $request->nombre;
+        $proveedor->create($request->all());
+        return response()->json(['proveedor'=>$request->all()]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  \App\Models\Proveedor  $proveedor
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show(Proveedor $proveedor)
     {
-        dd($cliente);
+        dd($proveedor);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cliente  $cliente
+     * @param  \App\Models\Proveedor  $proveedor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(Request $request, Proveedor $proveedor)
     {
         try {
-            Cliente::where('Id', $cliente->Id)->update($request->all());
+            Proveedor::where('Id', $proveedor->Id)->update($request->all());
             return response()->json(["mensaje"=>"correcto"]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
@@ -70,13 +70,13 @@ class ClienteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  \App\Models\Proveedor  $proveedor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy(Proveedor $proveedor)
     {
         try {
-            Cliente::where('Id', $cliente->Id)->delete();
+            Proveedor::where('Id', $proveedor->Id)->delete();
             return response()->json(['mensaje'=>'correcto']);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);

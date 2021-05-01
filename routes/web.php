@@ -21,6 +21,11 @@ Route::get('/clientes', function () {
     return view('Clientes.Cliente');
 });
 
+
+Route::get('/proveedores', function () {
+    return view('Proveedores.Proveedor');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
