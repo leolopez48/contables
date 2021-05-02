@@ -53,6 +53,16 @@
 
                                 <a class="dropdown-item" aria-current="page" href="{{url('/productos')}}">Productos</a>
                             </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Movimiento
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" aria-current="page" href="{{url('/detallecompra')}}">Detalle Compras</a>
+                            </div>
+                          </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

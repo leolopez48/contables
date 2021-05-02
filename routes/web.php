@@ -26,6 +26,10 @@ Route::get('/proveedores', function () {
     return view('Proveedores.Proveedor');
 });
 
+Route::get('/detallecompra', function () {
+    return view('DetalleCompra.DetalleCompra');
+});
+
 Route::get('/productos', function () {
     return view('Productos.Producto');
 });
