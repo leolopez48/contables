@@ -249,9 +249,7 @@ export default {
         }
       } else {
         //Insertar
-        const res = await axios.post("/api/cliente/", 
-           this.cliente,
-        );
+        const res = await axios.post("/api/cliente/", this.cliente);
         console.log(res.data);
         if (res.data.mensaje == "correcto") {
           Swal.fire({
@@ -272,14 +270,6 @@ export default {
       } else {
         this.titulo = "Nuevo Cliente";
       }
-    },
-    json2array(json) {
-      var result = [];
-      var keys = Object.keys(json);
-      keys.forEach(function (key) {
-        result.push(json[key]);
-      });
-      return result;
     },
   },
 };

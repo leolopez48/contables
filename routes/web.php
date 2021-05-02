@@ -29,6 +29,9 @@ Route::get('/proveedores', function () {
 Route::get('/productos', function () {
     return view('Productos.Producto');
 });
+Route::get('/empresa', function () {
+    return view('Empresa');
+});
 
 Auth::routes();
 
