@@ -26,6 +26,10 @@ Route::get('/proveedores', function () {
     return view('Proveedores.Proveedor');
 });
 
+Route::get('/productos', function () {
+    return view('Productos.Producto');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -3,8 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ClienteController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::resource('/cliente', App\Http\Controllers\ClienteController::class);
 Route::resource('/proveedor', App\Http\Controllers\ProveedorController::class);
+Route::resource('/producto', App\Http\Controllers\ProductoController::class);
+Route::post('/producto/{producto}', [App\Http\Controllers\ProductoController::class, 'update']);

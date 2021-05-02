@@ -33,8 +33,7 @@ class ClienteController extends Controller
     {
         $cliente = new Cliente();
         $id=DB::table('cliente')->latest('Id')->first();
-        $cliente->Id = $id;
-        $cliente->nombre= $request->nombre;
+        $cliente->Id = $id->Id+1;
         $cliente->create($request->all());
         return response()->json(['cliente'=>$request->all()]);
     }

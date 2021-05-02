@@ -21,11 +21,13 @@ window.Vue = require('vue').default;
 
 import ClienteComponent from "./components/Cliente.vue";
 import ProveedorComponent from "./components/Proveedor.vue";
+import ProductoComponent from "./components/Producto.vue";
 import PaginationComponent from "./components/Pagination.vue";
 // import JwPagination from 'jw-vue-pagination';
 
 Vue.component('cliente', ClienteComponent);
 Vue.component('proveedor', ProveedorComponent);
+Vue.component('producto', ProductoComponent);
 Vue.component('pagination', PaginationComponent);
 // Vue.component('jw-pagination', JwPagination);
 Vue.component('pagination-vue', require('laravel-vue-pagination'));
