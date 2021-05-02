@@ -121,12 +121,12 @@
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Imagen</th>
               <th scope="col">Nombre</th>
               <th scope="col">Existencias</th>
               <th scope="col">Precio</th>
               <th scope="col">Costo</th>
               <th scope="col">Descripcion</th>
-              <th scope="col">Imagen</th>
               <th scope="col">Codigo</th>
               <th scope="col">Acciones</th>
             </tr>
@@ -134,12 +134,12 @@
           <tbody>
             <tr v-for="pro in productos" :key="pro.Id">
               <td>{{ pro.Id }}</td>
+              <td><img :src="pro.Imagen" alt="" width="100px" /></td>
               <td>{{ pro.Nombre }}</td>
               <td>{{ pro.Existencias }}</td>
               <td>{{ pro.Precio }}</td>
               <td>{{ pro.Costo }}</td>
               <td>{{ pro.Descripcion }}</td>
-              <td><img :src="pro.Imagen" alt="" width="100px" /></td>
               <td>{{ pro.Codigo }}</td>
               <td>
                 <a
@@ -190,6 +190,7 @@ export default {
       noimagen: "/img/no-image.png",
       imagen: "/img/no-image.png",
       imagenModificada: false,
+      archivoAEnviar: [],
     };
   },
   mounted() {
@@ -248,14 +249,12 @@ export default {
           form.append("Precio", this.producto.Precio);
           form.append("Costo", this.producto.Costo);
           form.append("Descripcion", this.producto.Descripcion);
-          form.append("Imagen", this.producto.Imagen);
+          form.append("Imagen", this.archivoAEnviar);
           form.append("Codigo", this.producto.Codigo);
-          form.append("imagenModificada", this.imagenModificada);
+          //   form.append("imagenModificada", this.imagenModificada);
 
           respuesta = await axios.post(
-            "/api/producto/" +
-              this.producto.Id +
-              "?_method=PUT&imagenModificada=true",
+            "/api/producto/" + this.producto.Id + "?imagenModificada=true",
             form
           );
         } else {
@@ -326,14 +325,11 @@ export default {
     },
 
     prevImagen(e) {
+      console.log(e);
       const archivo = e.target.files[0];
       this.imagen = URL.createObjectURL(archivo);
       this.imagenModificada = true;
-      if (this.modificar) {
-        this.producto.Imagen = this.imagen;
-      } else {
-        this.producto.Imagen = archivo;
-      }
+      this.archivoAEnviar = archivo;
     },
   },
 };

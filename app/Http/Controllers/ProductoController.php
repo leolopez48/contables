@@ -74,18 +74,20 @@ class ProductoController extends Controller
     {
         try {
             $url = "";
+
             if ($request->imagenModificada) {
-                // dd($request, $producto);
                 if ($request->hasFile('Imagen')) {
                     $photo = Storage::put('public', $request->Imagen);
                     $url = Storage::url($photo);
                     $fullUrl = asset($url);
                 }
-
-                $producto->Imagen = $url;
             }
-            dd($request);
-            Producto::where('Id', $producto->Id)->update($producto);
+
+            $pro = new Producto();
+            $pro = $request->except('imagenModificada');
+            $pro["Imagen"] = $url;
+
+            Producto::where('Id', $producto->Id)->update($pro);
             return response()->json(["mensaje"=>"correcto"]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);

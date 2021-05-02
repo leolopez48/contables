@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('/cliente', App\Http\Controllers\ClienteController::class);
 Route::resource('/proveedor', App\Http\Controllers\ProveedorController::class);
 Route::resource('/producto', App\Http\Controllers\ProductoController::class);
+//Ruta para enviar foto y actualizar
 Route::post('/producto/{producto}', [App\Http\Controllers\ProductoController::class, 'update']);

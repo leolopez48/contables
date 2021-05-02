@@ -41,15 +41,18 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{url('/clientes')}}">Clientes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{url('/proveedores')}}">Proveedores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{url('/productos')}}">Productos</a>
-                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Administración
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" aria-current="page" href="{{url('/clientes')}}">Clientes</a>
+                                <a class="dropdown-item" aria-current="page"
+                                    href="{{url('/proveedores')}}">Proveedores</a>
+
+                                <a class="dropdown-item" aria-current="page" href="{{url('/productos')}}">Productos</a>
+                            </div>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

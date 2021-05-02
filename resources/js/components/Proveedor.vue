@@ -65,11 +65,19 @@
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">NIT</label>
-                <input type="text" class="form-control" v-model="proveedor.nit" />
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="proveedor.nit"
+                />
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">NRC</label>
-                <input type="text" class="form-control" v-model="proveedor.nrc" />
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="proveedor.nrc"
+                />
               </div>
 
               <div class="col-md-4 col-sm-12">
@@ -89,7 +97,7 @@
                   v-model="proveedor.razon_social"
                 />
               </div>
-              
+
               <div class="col-md-4 col-sm-12">
                 <label for="" class="pt-2">Teléfono</label>
                 <input
@@ -126,12 +134,11 @@
         ><i class="fas fa-plus" title="Agregar"></i
       ></a>
     </div>
-    
-  ...
+
     <div v-if="proveedores">
       <div class="table-responsive">
         <table class="table table-ligth table-hover">
-          <thead class="primeraFila" >
+          <thead class="primeraFila">
             <tr>
               <th scope="col">#</th>
               <th scope="col">Tipo</th>
@@ -260,9 +267,7 @@ export default {
         }
       } else {
         //Insertar
-        const res = await axios.post("/api/proveedor/", 
-           this.proveedor,
-        );
+        const res = await axios.post("/api/proveedor/", this.proveedor);
         console.log(res.data);
         if (res.data.mensaje == "correcto") {
           Swal.fire({
@@ -302,8 +307,7 @@ export default {
 }
 
 .primeraFila {
-  background: #343A40;
+  background: #343a40;
   color: white;
 }
-
 </style>

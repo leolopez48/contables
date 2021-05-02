@@ -2555,7 +2555,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       paginacion: {},
       noimagen: "/img/no-image.png",
       imagen: "/img/no-image.png",
-      imagenModificada: false
+      imagenModificada: false,
+      archivoAEnviar: []
     };
   },
   mounted: function mounted() {
@@ -2669,12 +2670,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 if (!_this4.modificar) {
-                  _context4.next = 24;
+                  _context4.next = 23;
                   break;
                 }
 
                 if (!_this4.imagenModificada) {
-                  _context4.next = 17;
+                  _context4.next = 16;
                   break;
                 }
 
@@ -2685,37 +2686,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 form.append("Precio", _this4.producto.Precio);
                 form.append("Costo", _this4.producto.Costo);
                 form.append("Descripcion", _this4.producto.Descripcion);
-                form.append("Imagen", _this4.producto.Imagen);
-                form.append("Codigo", _this4.producto.Codigo);
-                form.append("imagenModificada", _this4.imagenModificada);
-                _context4.next = 14;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/producto/" + _this4.producto.Id + "?_method=PUT&imagenModificada=true", form);
+                form.append("Imagen", _this4.archivoAEnviar);
+                form.append("Codigo", _this4.producto.Codigo); //   form.append("imagenModificada", this.imagenModificada);
 
-              case 14:
+                _context4.next = 13;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/producto/" + _this4.producto.Id + "?imagenModificada=true", form);
+
+              case 13:
                 respuesta = _context4.sent;
-                _context4.next = 21;
+                _context4.next = 20;
                 break;
 
-              case 17:
+              case 16:
                 form = _this4.producto;
-                _context4.next = 20;
+                _context4.next = 19;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/producto/" + _this4.producto.Id, _this4.producto);
 
-              case 20:
+              case 19:
                 respuesta = _context4.sent;
 
-              case 21:
+              case 20:
                 if (respuesta.data.mensaje == "correcto") {
                   cadenaTitulo = "Modificación";
                   cadenaTexto = "modificado";
                 }
 
-                _context4.next = 44;
+                _context4.next = 43;
                 break;
 
-              case 24:
+              case 23:
                 if (!_this4.imagenModificada) {
-                  _context4.next = 39;
+                  _context4.next = 38;
                   break;
                 }
 
@@ -2728,33 +2729,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 form.append("Descripcion", _this4.producto.Descripcion);
                 form.append("Imagen", _this4.producto.Imagen);
                 form.append("Codigo", _this4.producto.Codigo);
-                _context4.next = 36;
+                _context4.next = 35;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/producto/", form, {
                   headers: {
                     "Content-Type": "multipart/form-data"
                   }
                 });
 
-              case 36:
+              case 35:
                 respuesta = _context4.sent;
-                _context4.next = 43;
+                _context4.next = 42;
                 break;
 
-              case 39:
+              case 38:
                 form = _this4.producto;
-                _context4.next = 42;
+                _context4.next = 41;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/producto/" + _this4.producto.Id, _this4.producto);
 
-              case 42:
+              case 41:
                 respuesta = _context4.sent;
 
-              case 43:
+              case 42:
                 if (respuesta.data.mensaje == "correcto") {
                   cadenaTitulo = "Creación";
                   cadenaTexto = "creado";
                 }
 
-              case 44:
+              case 43:
                 console.log(respuesta);
 
                 if (respuesta.data.mensaje == "correcto") {
@@ -2767,10 +2768,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 $(_this4.$refs.vueModal).modal("hide");
-                _context4.next = 49;
+                _context4.next = 48;
                 return _this4.init();
 
-              case 49:
+              case 48:
               case "end":
                 return _context4.stop();
             }
@@ -2789,15 +2790,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     prevImagen: function prevImagen(e) {
+      console.log(e);
       var archivo = e.target.files[0];
       this.imagen = URL.createObjectURL(archivo);
       this.imagenModificada = true;
-
-      if (this.modificar) {
-        this.producto.Imagen = this.imagen;
-      } else {
-        this.producto.Imagen = archivo;
-      }
+      this.archivoAEnviar = archivo;
     }
   }
 });
@@ -2828,6 +2825,13 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7825,7 +7829,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.modal-xl[data-v-05cad603] {\r\n  width: 60%;\n}\n.primeraFila[data-v-05cad603] {\r\n  background: #343A40;\r\n  color: white;\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.modal-xl[data-v-05cad603] {\n  width: 60%;\n}\n.primeraFila[data-v-05cad603] {\n  background: #343a40;\n  color: white;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -45073,6 +45077,12 @@ var render = function() {
                     return _c("tr", { key: pro.Id }, [
                       _c("td", [_vm._v(_vm._s(pro.Id))]),
                       _vm._v(" "),
+                      _c("td", [
+                        _c("img", {
+                          attrs: { src: pro.Imagen, alt: "", width: "100px" }
+                        })
+                      ]),
+                      _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(pro.Nombre))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(pro.Existencias))]),
@@ -45082,12 +45092,6 @@ var render = function() {
                       _c("td", [_vm._v(_vm._s(pro.Costo))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(pro.Descripcion))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("img", {
-                          attrs: { src: pro.Imagen, alt: "", width: "100px" }
-                        })
-                      ]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(pro.Codigo))]),
                       _vm._v(" "),
@@ -45150,6 +45154,8 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
         _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Imagen")]),
+        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nombre")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Existencias")]),
@@ -45159,8 +45165,6 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Costo")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Descripcion")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Imagen")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Codigo")]),
         _vm._v(" "),
@@ -45589,7 +45593,7 @@ var render = function() {
         [_c("i", { staticClass: "fas fa-plus", attrs: { title: "Agregar" } })]
       )
     ]),
-    _vm._v("\n  \n...\n  "),
+    _vm._v(" "),
     _vm.proveedores
       ? _c(
           "div",

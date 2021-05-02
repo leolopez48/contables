@@ -27,4 +27,8 @@ class LibreriaController
         $renta = $valor * 0.10;
         return $renta;
     }
+
+    public function retencion(Proveedor $pro, Compra $com)
+    {
+    }
 }
