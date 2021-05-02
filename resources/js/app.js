@@ -24,6 +24,7 @@ import ProveedorComponent from "./components/Proveedor.vue";
 import ProductoComponent from "./components/Producto.vue";
 import DetalleCompraComponent from "./components/DetalleCompra.vue";
 import PaginationComponent from "./components/Pagination.vue";
+import InicioComponent from "./components/Inicio.vue";
 // import JwPagination from 'jw-vue-pagination';
 
 Vue.component('cliente', ClienteComponent);
@@ -31,9 +32,8 @@ Vue.component('proveedor', ProveedorComponent);
 Vue.component('producto', ProductoComponent);
 Vue.component('detallecompra', DetalleCompraComponent);
 Vue.component('pagination', PaginationComponent);
-// Vue.component('jw-pagination', JwPagination);
+Vue.component('inicio', InicioComponent);
 Vue.component('pagination-vue', require('laravel-vue-pagination'));
-// Vue.component('example', require('./components/ExampleComponent.vue'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
