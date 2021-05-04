@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetalleCompra;
 use App\Models\Compra;
 use App\Models\Producto;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
 class DetalleCompraController extends Controller
@@ -21,9 +22,12 @@ class DetalleCompraController extends Controller
             $detallecompras = DetalleCompra::paginate(5);
             $compra = Compra::get();
             $producto= Producto::get();
-            return response()->json(['mensaje'=>'correcto', 'detallecompras'=>$detallecompras , 'compra'=>$compra , 'producto'=>$producto]);
-           
-
+            $proveedor= Proveedor::get();
+            return response()->json(['mensaje'=>'correcto',
+            'detallecompras'=>$detallecompras ,
+            'compras'=>$compra ,
+            'productos'=>$producto,
+            'proveedores'=>$proveedor]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
         }
@@ -37,7 +41,6 @@ class DetalleCompraController extends Controller
      */
     public function store(Request $request)
     {
-
         $detallecompra = new DetalleCompra();
         $id=DB::table('detalle_compra')->latest('Id')->first();
         $detallecompra->Id = $id;

@@ -4,4 +4,5 @@
 <div class="container">
     <inicio />
 </div>
+
 @endsection

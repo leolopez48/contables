@@ -77,15 +77,21 @@
                   v-model="producto.Codigo"
                 />
               </div>
-              <div class="col-md-4 col-sm-12">
+              <div class="col-md-5 col-sm-12">
                 <label for="" class="pt-2">Imagen</label>
                 <br />
                 <img :src="imagen" height="100px" width="120px" class="mb-1" />
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg"
-                  @change="prevImagen"
-                />
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    accept="image/png, image/jpeg, image/jpg"
+                    @change="prevImagen"
+                  />
+                  <label class="custom-file-label" for="customFile"
+                    >Choose file</label
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -179,7 +185,9 @@ import Swal from "sweetalert2";
 import Pagination from "./Pagination.vue";
 
 export default {
-  components: { Pagination },
+  components: {
+    Pagination,
+  },
   data() {
     return {
       productos: Array,
@@ -201,6 +209,7 @@ export default {
       const res = await axios.get("/api/producto");
       this.productos = res.data.productos.data;
       this.paginacion = res.data.productos;
+      this.compra = {};
       //   console.log(this.paginacion);
     },
 

@@ -28,7 +28,6 @@ class EmpresaController extends Controller
     public function store(Request $request)
     {
         $empresa = new Empresa();
-        $empresa->Id = 1;
         $empresa->create($request->all());
         return response()->json(['mensaje'=>'correcto']);
     }
@@ -45,7 +44,7 @@ class EmpresaController extends Controller
         try {
             Empresa::where('Id', 1)->update($request->all());
             return response()->json(["mensaje"=>"correcto"]);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
         }
     }

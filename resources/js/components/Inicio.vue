@@ -99,6 +99,7 @@ export default {
     async actualizarInfo() {
       let res;
       if (this.primeraVez) {
+        this.empresa.Id = 1;
         res = await axios.post("/api/empresa", this.empresa);
       } else {
         const result = await Swal.fire({

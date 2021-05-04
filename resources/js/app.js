@@ -22,7 +22,7 @@ window.Vue = require('vue').default;
 import ClienteComponent from "./components/Cliente.vue";
 import ProveedorComponent from "./components/Proveedor.vue";
 import ProductoComponent from "./components/Producto.vue";
-import DetalleCompraComponent from "./components/DetalleCompra.vue";
+import DetalleCompraComponent from "./components/DetalleCompra/DetalleCompra.vue";
 import PaginationComponent from "./components/Pagination.vue";
 import InicioComponent from "./components/Inicio.vue";
 // import JwPagination from 'jw-vue-pagination';
