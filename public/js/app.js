@@ -3822,18 +3822,14 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
     },
     crearProducto: function crearProducto() {
       try {
-        var idSeleccionado = parseInt(this.ultimoAgregado[0].split(" ", 1));
+        var idSeleccionado = parseInt(this.ultimoAgregado.split(" ", 1));
         var seleccionado = this.productos.find(function (el) {
           return el.Id == idSeleccionado;
         });
-        var afectas = 0.00;
+        this.carrito.push(seleccionado);
 
         if (this.cantidadSeleccionada <= seleccionado.Existencias) {
-          this.carrito.push(seleccionado);
-          this.compra.iva = cal.ivaDeUnNeto(seleccionado.Precio);
-          var totalProducto = seleccionado.Precio * this.cantidadSeleccionada;
-          afectas = totalProducto * this.compra.iva + this.compra.total + totalProducto;
-          this.compra.total = afectas;
+          this.totalesCarrito(seleccionado, false);
         } else {
           sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
             title: "Producto con pocas existencias.",
@@ -3843,6 +3839,7 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
           });
         }
       } catch (error) {
+        // console.log(error)
         sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
           title: "Verifica los datos del producto",
           text: "No has seleccionado un producto.",
@@ -3852,10 +3849,28 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
       }
     },
     eliminarProdCarrito: function eliminarProdCarrito(prodCarrito) {
-      var index = this.carrito.indexOf(prodCarrito);
+      var indice = this.carrito.indexOf(prodCarrito);
 
-      if (index > -1) {
-        this.carrito.splice(index, 1);
+      if (indice > -1) {
+        this.carrito.splice(indice, 1);
+        var seleccionado = this.productos.find(function (el) {
+          return el.Id == prodCarrito.Id;
+        });
+        this.totalesCarrito(seleccionado, true);
+      }
+    },
+    totalesCarrito: function totalesCarrito(seleccionado, eliminandoProducto) {
+      var afectas = 0.00;
+      var iva = cal.ivaDeUnNeto(seleccionado.Precio);
+      var totalProducto = seleccionado.Precio * this.cantidadSeleccionada;
+      afectas = totalProducto * iva + totalProducto;
+
+      if (eliminandoProducto) {
+        this.compra.total -= afectas;
+        this.compra.iva -= iva;
+      } else {
+        this.compra.total = afectas + this.compra.total;
+        this.compra.iva += iva;
       }
     }
   }

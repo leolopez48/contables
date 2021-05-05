@@ -117,19 +117,13 @@ export default {
         crearProducto() {
             try {
 
-                const idSeleccionado = parseInt(this.ultimoAgregado[0].split(" ", 1));
-                var seleccionado = this.productos.find(el => el.Id == idSeleccionado);
-                let afectas = 0.00;
+                const idSeleccionado = parseInt(this.ultimoAgregado.split(" ", 1));
+                const seleccionado = this.productos.find(el => el.Id == idSeleccionado);
+                this.carrito.push(seleccionado);
 
                 if (this.cantidadSeleccionada <= seleccionado.Existencias) {
+                    this.totalesCarrito(seleccionado, false);
 
-                    this.carrito.push(seleccionado);
-                    this.compra.iva = cal.ivaDeUnNeto(seleccionado.Precio);
-                    const totalProducto = seleccionado.Precio * this.cantidadSeleccionada;
-
-                    afectas = (totalProducto) * this.compra.iva + this.compra.total + totalProducto;
-
-                    this.compra.total = afectas;
                 } else {
 
                     Swal.fire({
@@ -141,7 +135,7 @@ export default {
                 }
 
             } catch (error) {
-
+                // console.log(error)
                 Swal.fire({
                     title: "Verifica los datos del producto",
                     text: "No has seleccionado un producto.",
@@ -152,9 +146,28 @@ export default {
             }
         },
         eliminarProdCarrito(prodCarrito) {
-            const index = this.carrito.indexOf(prodCarrito);
-            if (index > -1) {
-                this.carrito.splice(index, 1);
+            const indice = this.carrito.indexOf(prodCarrito);
+            if (indice > -1) {
+                this.carrito.splice(indice, 1);
+                const seleccionado = this.productos.find(el => el.Id == prodCarrito.Id);
+                this.totalesCarrito(seleccionado, true);
+            }
+        },
+        totalesCarrito(seleccionado, eliminandoProducto) {
+            let afectas = 0.00;
+
+
+            const iva = cal.ivaDeUnNeto(seleccionado.Precio);
+            const totalProducto = seleccionado.Precio * this.cantidadSeleccionada;
+
+            afectas = (totalProducto) * iva + totalProducto;
+
+            if (eliminandoProducto) {
+                this.compra.total -= afectas;
+                this.compra.iva -= iva;
+            } else {
+                this.compra.total = afectas + this.compra.total;
+                this.compra.iva += iva;
             }
         }
     },
