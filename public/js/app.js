@@ -2500,7 +2500,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    paginationvue: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1___default())
+    pagination1: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1___default())
   },
   props: {
     array: {
@@ -3464,6 +3464,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var con = new _constantes__WEBPACK_IMPORTED_MODULE_0__.default();
 var iva = con.IVA;
+var retencion = con.RETENCION;
 
 var Calculos = /*#__PURE__*/function () {
   function Calculos() {
@@ -3474,6 +3475,47 @@ var Calculos = /*#__PURE__*/function () {
     key: "ivaDeUnNeto",
     value: function ivaDeUnNeto(precio) {
       return precio * iva;
+    }
+  }, {
+    key: "retencionNeto",
+    value: function retencionNeto(tipoContEmpresa, totalCompra, tipoContProveedor, tipoTransaccion) {
+      if (totalCompra > 100.00) {
+        if (tipoTransaccion == 'Compra') {
+          if (tipoContEmpresa == tipoContProveedor) {
+            //Cuando son gran contribuyentes, medianos o pequeños ambos
+            return {
+              total: 0.00,
+              transaccion: 'Retención'
+            };
+          } else if (tipoContEmpresa == 'gran contribuyente' && tipoContProveedor != 'gran contribuyente') {
+            //Retención
+            return {
+              total: totalCompra * retencion,
+              transaccion: 'Retención'
+            };
+          }
+        } else {
+          if (tipoContEmpresa == tipoContProveedor) {
+            //Cuando son gran contribuyentes, medianos o pequeños ambos
+            return {
+              total: 0.00,
+              transaccion: 'Percepción'
+            };
+          } else if (tipoContEmpresa == 'gran contribuyente' && tipoContProveedor != 'gran contribuyente') {
+            //Retención
+            return {
+              total: totalCompra * retencion,
+              //Percepción
+              transaccion: 'Percepción'
+            };
+          }
+        }
+      } else {
+        return {
+          total: 0.00,
+          transaccion: 'Retención'
+        };
+      }
     }
   }]);
 
@@ -3624,17 +3666,19 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
     return {
       detallecompras: Array,
       compras: [],
-      compra: [],
+      compra: {},
       productos: [],
       modificar: false,
       detallecompra: {},
       titulo: String,
       paginacion: {},
-      archivo: [],
       proveedores: [],
       ultimoAgregado: [],
       carrito: [],
-      cantidadSeleccionada: 1
+      cantidadSeleccionada: 1,
+      empresa: {},
+      tituloRetencion: 'Percepción',
+      productosTemp: []
     };
   },
   mounted: function mounted() {
@@ -3661,10 +3705,12 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
                 _this.detallecompras = res.data.detallecompras.data;
                 _this.compras = res.data.compras;
                 _this.productos = res.data.productos;
+                _this.productosTemp = res.data.productos;
                 _this.proveedores = res.data.proveedores;
                 _this.paginacion = res.data.detallecompras;
+                _this.empresa = res.data.empresa; // this.$refs.selectProductos.disabled = true;
 
-              case 8:
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -3747,7 +3793,7 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        var res, _res;
+        var res, proveedor, _res;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
@@ -3773,14 +3819,24 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
                   });
                 }
 
-                _context4.next = 12;
+                _context4.next = 14;
                 break;
 
               case 7:
-                _context4.next = 9;
+                //Insertar
+                if (typeof _this4.compra.proveedor != 'number') {
+                  proveedor = parseInt(_this4.compra.proveedor.split(" ", 1));
+                  _this4.compra.proveedor = proveedor;
+                }
+
+                _this4.detallecompra = {
+                  productos: _this4.carrito,
+                  compra: _this4.compra
+                };
+                _context4.next = 11;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/detallecompra/", _this4.detallecompra);
 
-              case 9:
+              case 11:
                 _res = _context4.sent;
                 console.log(_res.data);
 
@@ -3793,12 +3849,12 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
                   });
                 }
 
-              case 12:
+              case 14:
                 $(_this4.$refs.vueModal).modal("hide");
-                _context4.next = 15;
+                _context4.next = 17;
                 return _this4.init();
 
-              case 15:
+              case 17:
               case "end":
                 return _context4.stop();
             }
@@ -3822,14 +3878,12 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
     },
     crearProducto: function crearProducto() {
       try {
-        var idSeleccionado = parseInt(this.ultimoAgregado.split(" ", 1));
-        var seleccionado = this.productos.find(function (el) {
-          return el.Id == idSeleccionado;
-        });
-        this.carrito.push(seleccionado);
+        var seleccionado = this.buscarSeleccionado(this.ultimoAgregado, this.productos); // console.log(seleccionado)
 
         if (this.cantidadSeleccionada <= seleccionado.Existencias) {
           this.totalesCarrito(seleccionado, false);
+          this.carrito.push(seleccionado);
+          this.eliminarProductosTemp(seleccionado);
         } else {
           sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
             title: "Producto con pocas existencias.",
@@ -3839,10 +3893,10 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
           });
         }
       } catch (error) {
-        // console.log(error)
+        console.log(error);
         sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
-          title: "Verifica los datos del producto",
-          text: "No has seleccionado un producto.",
+          title: "Verifica los datos del producto o proveedor",
+          text: "No has seleccionado un producto o proveedor.",
           icon: "error",
           confirmButtonText: "Hecho"
         });
@@ -3850,6 +3904,7 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
     },
     eliminarProdCarrito: function eliminarProdCarrito(prodCarrito) {
       var indice = this.carrito.indexOf(prodCarrito);
+      this.productosTemp.push(prodCarrito);
 
       if (indice > -1) {
         this.carrito.splice(indice, 1);
@@ -3861,16 +3916,42 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
     },
     totalesCarrito: function totalesCarrito(seleccionado, eliminandoProducto) {
       var afectas = 0.00;
-      var iva = cal.ivaDeUnNeto(seleccionado.Precio);
       var totalProducto = seleccionado.Precio * this.cantidadSeleccionada;
-      afectas = totalProducto * iva + totalProducto;
+      var iva = cal.ivaDeUnNeto(totalProducto); // const empresa = this.empresa.calificacion;
+
+      var proveedor = this.buscarSeleccionado(this.compra.proveedor, this.proveedores); // console.log(this.empresa.clasificacion)
+
+      console.log(this.empresa.clasificacion, totalProducto, proveedor.clasificacion, 'Compra');
+      this.compra.condicion = 'Compra';
+      var retencion = cal.retencionNeto(this.empresa.clasificacion, totalProducto, proveedor.clasificacion, 'Compra');
+      this.tituloRetencion = retencion.transaccion == 'Retención' ? 'Retención' : 'Percepción';
 
       if (eliminandoProducto) {
+        afectas = totalProducto + iva + retencion.total;
         this.compra.total -= afectas;
         this.compra.iva -= iva;
+        this.compra.retencion -= retencion.total;
       } else {
+        afectas = totalProducto + this.compra.total + iva + retencion.total;
         this.compra.total = afectas + this.compra.total;
         this.compra.iva += iva;
+        this.compra.retencion += retencion.total;
+      }
+    },
+    buscarSeleccionado: function buscarSeleccionado(variable, array) {
+      var idSeleccionado = parseInt(variable.split(" ", 1));
+      var seleccionado = array.find(function (el) {
+        return el.Id == idSeleccionado;
+      }); // console.log(seleccionado)
+
+      return seleccionado;
+    },
+    eliminarProductosTemp: function eliminarProductosTemp(seleccionado) {
+      var indice = this.productos.indexOf(seleccionado);
+      console.log(indice);
+
+      if (indice > -1) {
+        this.productosTemp.splice(indice, 1);
       }
     }
   }
@@ -45619,7 +45700,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-4 col-sm-12" }, [
                     _c("label", { staticClass: "pt-2", attrs: { for: "" } }, [
-                      _vm._v("Retención")
+                      _vm._v(_vm._s(_vm.tituloRetencion))
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -45684,7 +45765,15 @@ var render = function() {
                       },
                       _vm._l(_vm.proveedores, function(prov) {
                         return _c("option", { key: prov.Id }, [
-                          _vm._v(" " + _vm._s(prov.nombre))
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(prov.Id) +
+                              " - " +
+                              _vm._s(prov.nombre) +
+                              " (" +
+                              _vm._s(prov.clasificacion) +
+                              ")\n                                "
+                          )
                         ])
                       }),
                       0
@@ -45743,6 +45832,7 @@ var render = function() {
                                 expression: "ultimoAgregado"
                               }
                             ],
+                            ref: "selectProductos",
                             staticClass: "custom-select",
                             on: {
                               change: function($event) {
@@ -45760,13 +45850,14 @@ var render = function() {
                               }
                             }
                           },
-                          _vm._l(_vm.productos, function(pro) {
+                          _vm._l(_vm.productosTemp, function(pro) {
                             return _c(
                               "option",
                               { key: pro.Id, attrs: { "v-value": pro.Id } },
                               [
                                 _vm._v(
-                                  _vm._s(pro.Id) +
+                                  "\n                                            " +
+                                    _vm._s(pro.Id) +
                                     "\n                                            -\n                                            " +
                                     _vm._s(pro.Nombre) +
                                     "\n                                        "
@@ -45827,9 +45918,7 @@ var render = function() {
                           },
                           [
                             _c("i", { staticClass: "fas fa-plus" }),
-                            _vm._v(
-                              "\n                                        Agregar"
-                            )
+                            _vm._v(" Agregar")
                           ]
                         )
                       ])
@@ -45864,8 +45953,7 @@ var render = function() {
                                         _c("img", {
                                           attrs: {
                                             src: carrito.Imagen,
-                                            width: "50px",
-                                            alt: ""
+                                            width: "50px"
                                           }
                                         })
                                       ]),
@@ -46006,7 +46094,7 @@ var render = function() {
                     return _c("tr", { key: det.Id }, [
                       _c("td", [_vm._v(_vm._s(det.Id))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(" " + _vm._s(det.compra))]),
+                      _c("td", [_vm._v(_vm._s(det.compra))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(det.producto))]),
                       _vm._v(" "),
@@ -46392,7 +46480,7 @@ var render = function() {
     "div",
     { staticClass: "text-center m-3" },
     [
-      _c("paginationvue", {
+      _c("pagination1", {
         attrs: { data: _vm.array },
         on: { "pagination-change-page": _vm.getResults }
       })

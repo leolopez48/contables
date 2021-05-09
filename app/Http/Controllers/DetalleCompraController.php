@@ -6,7 +6,10 @@ use App\Models\DetalleCompra;
 use App\Models\Compra;
 use App\Models\Producto;
 use App\Models\Proveedor;
+use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Auth;
+use App\User;
 
 class DetalleCompraController extends Controller
 {
@@ -18,15 +21,16 @@ class DetalleCompraController extends Controller
     public function index()
     {
         try {
-            //$compra = DB::table('compra')->get();
             $detallecompras = DetalleCompra::paginate(5);
             $compra = Compra::get();
             $producto= Producto::get();
             $proveedor= Proveedor::get();
+            $empresa= Empresa::get();
             return response()->json(['mensaje'=>'correcto',
             'detallecompras'=>$detallecompras ,
             'compras'=>$compra ,
             'productos'=>$producto,
+            'empresa'=>$empresa[0],
             'proveedores'=>$proveedor]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
@@ -41,11 +45,24 @@ class DetalleCompraController extends Controller
      */
     public function store(Request $request)
     {
-        $detallecompra = new DetalleCompra();
-        $id=DB::table('detalle_compra')->latest('Id')->first();
-        $detallecompra->Id = $id;
-        $detallecompra->create($request->all());
-        return response()->json(['detalle_compra'=>$request->all()]);
+        $usuario = $request;
+        dd(optional(Auth::user())->id);
+        foreach ($request->productos as $pro) {
+            $compra = new Compra();
+            // $compra->Id = $pro->Id;
+            $compra->condiciones = $pro->condicion;
+            $compra->fecha = $pro->fecha;
+            $compra->iva = $pro->iva;
+            $compra->retencion = $pro->retencion;
+            $compra->afectas = $pro->total;
+            $compra->registrado_por = $usuario;
+            $compra->proveedor = $pro->proveedor;
+            return response()->json([$compra]);
+        }
+        // $detallecompra = new DetalleCompra();
+        // $id=DB::table('detalle_compra')->latest('Id')->first();
+        // $detallecompra->Id = $id;
+        // $detallecompra->create($request->all());
     }
 
     /**

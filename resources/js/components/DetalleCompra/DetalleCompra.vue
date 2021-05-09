@@ -17,7 +17,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h5 class="mt-1">Resumen</h5>
-                                <hr>
+                                <hr />
                             </div>
 
                             <div v-if="modificar" class="col-md-4">
@@ -51,7 +51,7 @@
                             </div>
 
                             <div class="col-md-4 col-sm-12">
-                                <label for="" class="pt-2">Retención</label>
+                                <label for="" class="pt-2">{{ tituloRetencion}}</label>
                                 <input type="number" step="0.01" disabled class="form-control"
                                     v-model="compra.retencion" />
                             </div>
@@ -59,7 +59,9 @@
                             <div class="col-md-6 col-sm-12">
                                 <label for="" class="pt-2">Proveedor</label>
                                 <select class="custom-select" v-model="compra.proveedor">
-                                    <option v-for="prov in proveedores" :key="prov.Id"> {{prov.nombre}}</option>
+                                    <option v-for="prov in proveedores" :key="prov.Id">
+                                        {{ prov.Id }} - {{ prov.nombre }} ({{prov.clasificacion}})
+                                    </option>
                                 </select>
                             </div>
 
@@ -70,15 +72,15 @@
 
                             <div class="col-md-12">
                                 <h5 class="mt-3">Productos</h5>
-                                <hr>
+                                <hr />
                                 <div class="row">
                                     <div class="col-md-4">
-
                                         <label for="" class="pt-2">Producto</label>
-                                        <select class="custom-select" v-model="ultimoAgregado">
-                                            <option v-for="pro in productos" :key="pro.Id" :v-value="pro.Id">{{pro.Id}}
+                                        <select class="custom-select" v-model="ultimoAgregado" ref="selectProductos" >
+                                            <option v-for="pro in productosTemp" :key="pro.Id" :v-value="pro.Id">
+                                                {{ pro.Id }}
                                                 -
-                                                {{pro.Nombre}}
+                                                {{ pro.Nombre }}
                                             </option>
                                         </select>
                                     </div>
@@ -89,12 +91,11 @@
                                     </div>
                                     <div class="col-md-4">
                                         <a href="#" @click="crearProducto()" class="mt-3 btn btn-primary"><i
-                                                class="fas fa-plus"></i>
-                                            Agregar</a>
+                                                class="fas fa-plus"></i> Agregar</a>
                                     </div>
                                 </div>
                                 <h5 class="mt-3">Carrito</h5>
-                                <hr>
+                                <hr />
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-md-12 text-center">
@@ -114,21 +115,24 @@
                                                 </thead>
                                                 <tbody ref="tablaCarrito">
                                                     <tr v-if="carrito.length > 0">
-                                                    <tr v-for="carrito in carrito" :key="carrito.Id">
-                                                        <td>{{carrito.Id}}</td>
-                                                        <td><img :src="carrito.Imagen" width="50px" alt=""></td>
-                                                        <td>{{carrito.Nombre}}</td>
-                                                        <td>{{carrito.Existencias}}</td>
-                                                        <td>{{carrito.Precio}}</td>
-                                                        <td>{{carrito.Costo}}</td>
-                                                        <td>{{carrito.Descripcion}}</td>
-                                                        <td>{{carrito.Codigo}}</td>
-                                                        <a href="#" class="btn btn-danger mt-1" title="Eliminar"
-                                                            @click="eliminarProdCarrito(carrito)">
-                                                            <i class="fas fa-trash"></i>
-                                                        </a>
+                                                        <tr v-for="carrito in carrito" :key="carrito.Id">
+                                                            <td>{{ carrito.Id }}</td>
+                                                            <td>
+                                                                <img :src="carrito.Imagen" width="50px" />
+                                                            </td>
+                                                            <td>{{ carrito.Nombre }}</td>
+                                                            <td>{{ carrito.Existencias }}</td>
+                                                            <td>{{ carrito.Precio }}</td>
+                                                            <td>{{ carrito.Costo }}</td>
+                                                            <td>{{ carrito.Descripcion }}</td>
+                                                            <td>{{ carrito.Codigo }}</td>
+                                                            <a href="#" class="btn btn-danger mt-1" title="Eliminar"
+                                                                @click="eliminarProdCarrito(carrito)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                        </tr>
                                                     </tr>
-                                                    </tr>
+
                                                     <tr v-if="carrito.length == 0">
                                                         <td colspan="9">El carrito está vacío.</td>
                                                     </tr>
@@ -139,8 +143,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -177,15 +179,16 @@
                     <tbody>
                         <tr v-for="det in detallecompras" :key="det.Id">
                             <td>{{ det.Id }}</td>
-                            <td> {{ det.compra }}</td>
+                            <td>{{ det.compra }}</td>
                             <td>{{ det.producto }}</td>
                             <td>{{ det.cant }}</td>
                             <td>{{ det.price }}</td>
                             <td>
                                 <a href="#" class="btn btn-secondary mt-1" @click="
-                                    modificar = true;
-                                    abrirModal();
-                                    editar(det);" title="Editar" data-toggle="modal" data-target="#myModal">
+                    modificar = true;
+                    abrirModal();
+                    editar(det);
+                  " title="Editar" data-toggle="modal" data-target="#myModal">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <a href="#" class="btn btn-danger mt-1" title="Eliminar" @click="eliminar(det.Id)"><i
@@ -195,7 +198,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
         <pagination :array="paginacion" />
     </div>

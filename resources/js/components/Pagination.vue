@@ -1,15 +1,15 @@
 <template>
   <div class="text-center m-3">
     <!-- Paginacion -->
-    <paginationvue :data="array" @pagination-change-page="getResults">
-    </paginationvue>
+    <pagination1 :data="array" @pagination-change-page="getResults">
+    </pagination1>
   </div>
 </template>
 
 <script>
-import paginationvue from "laravel-vue-pagination";
+import pagination1 from "laravel-vue-pagination";
 export default {
-  components: { paginationvue },
+  components: { pagination1 },
   props: {
     array: {
       type: Object,

@@ -17,28 +17,35 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/clientes', function () {
-    return view('Clientes.Cliente');
-});
+
+// Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::get('/clientes', function () {
+        return view('Clientes.Cliente');
+    });
 
 
-Route::get('/proveedores', function () {
-    return view('Proveedores.Proveedor');
-});
+    Route::get('/proveedores', function () {
+        return view('Proveedores.Proveedor');
+    });
 
-Route::get('/detallecompra', function () {
-    return view('DetalleCompra.DetalleCompra');
-});
+    Route::get('/detallecompra', function () {
+        return view('DetalleCompra.DetalleCompra');
+    });
 
-Route::get('/productos', function () {
-    return view('Productos.Producto');
-});
-Route::get('/empresa', function () {
-    return view('Empresa');
-});
+    Route::get('/productos', function () {
+        return view('Productos.Producto');
+    });
+    Route::get('/empresa', function () {
+        return view('Empresa');
+    });
+// });
+
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 
 // Route::post('/iva', [App\Http\Controllers\HomeController::class, 'prueba']);
