@@ -172,8 +172,11 @@
           </tbody>
         </table>
       </div>
-      <pagination :array="paginacion" />
-      <!-- <jw-pagination></jw-pagination> -->
+      <paginationLaravel
+        :data="paginacion"
+        @pagination-change-page="getResults"
+      >
+      </paginationLaravel>
     </div>
   </div>
 </template>
@@ -181,13 +184,12 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-import Pagination from "./Pagination.vue";
-// import pagination from "laravel-vue-pagination";
+import PaginationLaravel from "laravel-vue-pagination";
 
 let csrf = document.head.querySelector('meta[name="csrf-token"]');
 
 export default {
-  components: { Pagination },
+  components: { PaginationLaravel },
   data() {
     return {
       clientes: Array,
@@ -207,6 +209,13 @@ export default {
       this.paginacion = res.data.clientes;
       //   console.log(this.paginacion);
     },
+
+    async getResults(page = 1) {
+      const res = await axios.get(this.paginacion.path + "?page=" + page);
+      this.clientes = res.data.clientes.data;
+      this.paginacion = res.data.clientes;
+    },
+
     async eliminar(id) {
       const resultado = await Swal.fire({
         title: "Estás seguro?",

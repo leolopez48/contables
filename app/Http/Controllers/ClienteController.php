@@ -16,7 +16,7 @@ class ClienteController extends Controller
     public function index()
     {
         try {
-            $clientes = Cliente::paginate(5);
+            $clientes = Cliente::paginate(15);
             return response()->json(['mensaje'=>'correcto', 'clientes'=>$clientes]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);

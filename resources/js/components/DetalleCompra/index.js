@@ -219,7 +219,7 @@ export default {
                 // console.log(seleccionado)
                 if (this.cantidadSeleccionada <= seleccionado.Existencias) {
 
-                    seleccionado.cantidad = this.cantidadSeleccionada;
+                    // seleccionado.cantidad = this.cantidadSeleccionada;
                     seleccionado.Existencias = seleccionado.Existencias - this.cantidadSeleccionada;
 
                     if (this.carrito.some((el) => el.Id == seleccionado.Id)) {

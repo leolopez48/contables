@@ -1862,7 +1862,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Pagination.vue */ "./resources/js/components/Pagination.vue");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2049,14 +2050,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 
- // import pagination from "laravel-vue-pagination";
 
 var csrf = document.head.querySelector('meta[name="csrf-token"]');
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Pagination: _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__.default
+    PaginationLaravel: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default())
   },
   data: function data() {
     return {
@@ -2096,16 +2099,43 @@ var csrf = document.head.querySelector('meta[name="csrf-token"]');
         }, _callee);
       }))();
     },
-    eliminar: function eliminar(id) {
-      var _this2 = this;
+    getResults: function getResults() {
+      var _arguments = arguments,
+          _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var resultado, res;
+        var page, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
+                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get(_this2.paginacion.path + "?page=" + page);
+
+              case 3:
+                res = _context2.sent;
+                _this2.clientes = res.data.clientes.data;
+                _this2.paginacion = res.data.clientes;
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    eliminar: function eliminar(id) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var resultado, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
                 return sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
                   title: "Estás seguro?",
                   text: "Esta acción no se puede revertir.",
@@ -2117,18 +2147,18 @@ var csrf = document.head.querySelector('meta[name="csrf-token"]');
                 });
 
               case 2:
-                resultado = _context2.sent;
+                resultado = _context3.sent;
 
                 if (!resultado.isConfirmed) {
-                  _context2.next = 9;
+                  _context3.next = 9;
                   break;
                 }
 
-                _context2.next = 6;
+                _context3.next = 6;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().delete("/api/cliente/" + id);
 
               case 6:
-                res = _context2.sent;
+                res = _context3.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
@@ -2139,27 +2169,9 @@ var csrf = document.head.querySelector('meta[name="csrf-token"]');
                   });
                 }
 
-                _this2.init();
+                _this3.init();
 
               case 9:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    editar: function editar(cliente) {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _this3.cliente = cliente;
-
-              case 1:
               case "end":
                 return _context3.stop();
             }
@@ -2167,26 +2179,44 @@ var csrf = document.head.querySelector('meta[name="csrf-token"]');
         }, _callee3);
       }))();
     },
-    guardar: function guardar() {
+    editar: function editar(cliente) {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        var res, _res;
-
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                if (!_this4.modificar) {
-                  _context4.next = 7;
+                _this4.cliente = cliente;
+
+              case 1:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    guardar: function guardar() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        var res, _res;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                if (!_this5.modificar) {
+                  _context5.next = 7;
                   break;
                 }
 
-                _context4.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/cliente/" + _this4.cliente.Id, _this4.cliente);
+                _context5.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/cliente/" + _this5.cliente.Id, _this5.cliente);
 
               case 3:
-                res = _context4.sent;
+                res = _context5.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
@@ -2197,15 +2227,15 @@ var csrf = document.head.querySelector('meta[name="csrf-token"]');
                   });
                 }
 
-                _context4.next = 12;
+                _context5.next = 12;
                 break;
 
               case 7:
-                _context4.next = 9;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/cliente", _this4.cliente);
+                _context5.next = 9;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/cliente", _this5.cliente);
 
               case 9:
-                _res = _context4.sent;
+                _res = _context5.sent;
                 console.log(_res.data);
 
                 if (_res.data.mensaje == "correcto") {
@@ -2218,16 +2248,16 @@ var csrf = document.head.querySelector('meta[name="csrf-token"]');
                 }
 
               case 12:
-                $(_this4.$refs.vueModal).modal("hide");
-                _context4.next = 15;
-                return _this4.init();
+                $(_this5.$refs.vueModal).modal("hide");
+                _context5.next = 15;
+                return _this5.init();
 
               case 15:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4);
+        }, _callee5);
       }))();
     },
     abrirModal: function abrirModal() {
@@ -2583,7 +2613,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Pagination.vue */ "./resources/js/components/Pagination.vue");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2771,12 +2802,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Pagination: _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__.default
+    PaginationLaravel: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default())
   },
   data: function data() {
     return {
@@ -2821,16 +2856,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    eliminar: function eliminar(id) {
-      var _this2 = this;
+    getResults: function getResults() {
+      var _arguments = arguments,
+          _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var resultado, res;
+        var page, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
+                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get(_this2.paginacion.path + "?page=" + page);
+
+              case 3:
+                res = _context2.sent;
+                _this2.productos = res.data.productos.data;
+                _this2.paginacion = res.data.productos;
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    eliminar: function eliminar(id) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var resultado, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
                 return sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
                   title: "Estás seguro?",
                   text: "Esta acción no se puede revertir.",
@@ -2842,18 +2904,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 2:
-                resultado = _context2.sent;
+                resultado = _context3.sent;
 
                 if (!resultado.isConfirmed) {
-                  _context2.next = 9;
+                  _context3.next = 9;
                   break;
                 }
 
-                _context2.next = 6;
+                _context3.next = 6;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().delete("/api/producto/" + id);
 
               case 6:
-                res = _context2.sent;
+                res = _context3.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
@@ -2864,28 +2926,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 }
 
-                _this2.init();
+                _this3.init();
 
               case 9:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    editar: function editar(producto) {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _this3.producto = producto;
-                _this3.imagen = producto.Imagen;
-
-              case 2:
               case "end":
                 return _context3.stop();
             }
@@ -2893,50 +2936,69 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    guardar: function guardar() {
+    editar: function editar(producto) {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        var form, cadenaTitulo, cadenaTexto, respuesta;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                if (!_this4.modificar) {
-                  _context4.next = 23;
+                _this4.producto = producto;
+                _this4.imagen = producto.Imagen;
+
+              case 2:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    guardar: function guardar() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        var form, cadenaTitulo, cadenaTexto, respuesta;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                if (!_this5.modificar) {
+                  _context5.next = 23;
                   break;
                 }
 
-                if (!_this4.imagenModificada) {
-                  _context4.next = 16;
+                if (!_this5.imagenModificada) {
+                  _context5.next = 16;
                   break;
                 }
 
                 form = new FormData();
-                form.append("Id", _this4.producto.Id);
-                form.append("Nombre", _this4.producto.Nombre);
-                form.append("Existencias", _this4.producto.Existencias);
-                form.append("Precio", _this4.producto.Precio);
-                form.append("Costo", _this4.producto.Costo);
-                form.append("Descripcion", _this4.producto.Descripcion);
-                form.append("Imagen", _this4.archivoAEnviar);
-                form.append("Codigo", _this4.producto.Codigo); //   form.append("imagenModificada", this.imagenModificada);
+                form.append("Id", _this5.producto.Id);
+                form.append("Nombre", _this5.producto.Nombre);
+                form.append("Existencias", _this5.producto.Existencias);
+                form.append("Precio", _this5.producto.Precio);
+                form.append("Costo", _this5.producto.Costo);
+                form.append("Descripcion", _this5.producto.Descripcion);
+                form.append("Imagen", _this5.archivoAEnviar);
+                form.append("Codigo", _this5.producto.Codigo); //   form.append("imagenModificada", this.imagenModificada);
 
-                _context4.next = 13;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/producto/" + _this4.producto.Id + "?imagenModificada=true", form);
+                _context5.next = 13;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/producto/" + _this5.producto.Id + "?imagenModificada=true", form);
 
               case 13:
-                respuesta = _context4.sent;
-                _context4.next = 20;
+                respuesta = _context5.sent;
+                _context5.next = 20;
                 break;
 
               case 16:
-                form = _this4.producto;
-                _context4.next = 19;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/producto/" + _this4.producto.Id, _this4.producto);
+                form = _this5.producto;
+                _context5.next = 19;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/producto/" + _this5.producto.Id, _this5.producto);
 
               case 19:
-                respuesta = _context4.sent;
+                respuesta = _context5.sent;
 
               case 20:
                 if (respuesta.data.mensaje == "correcto") {
@@ -2944,25 +3006,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   cadenaTexto = "modificado";
                 }
 
-                _context4.next = 43;
+                _context5.next = 43;
                 break;
 
               case 23:
-                if (!_this4.imagenModificada) {
-                  _context4.next = 38;
+                if (!_this5.imagenModificada) {
+                  _context5.next = 38;
                   break;
                 }
 
                 form = new FormData();
-                form.append("Id", _this4.producto.Id);
-                form.append("Nombre", _this4.producto.Nombre);
-                form.append("Existencias", _this4.producto.Existencias);
-                form.append("Precio", _this4.producto.Precio);
-                form.append("Costo", _this4.producto.Costo);
-                form.append("Descripcion", _this4.producto.Descripcion);
-                form.append("Imagen", _this4.producto.Imagen);
-                form.append("Codigo", _this4.producto.Codigo);
-                _context4.next = 35;
+                form.append("Id", _this5.producto.Id);
+                form.append("Nombre", _this5.producto.Nombre);
+                form.append("Existencias", _this5.producto.Existencias);
+                form.append("Precio", _this5.producto.Precio);
+                form.append("Costo", _this5.producto.Costo);
+                form.append("Descripcion", _this5.producto.Descripcion);
+                form.append("Imagen", _this5.producto.Imagen);
+                form.append("Codigo", _this5.producto.Codigo);
+                _context5.next = 35;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/producto/", form, {
                   headers: {
                     "Content-Type": "multipart/form-data"
@@ -2970,17 +3032,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 35:
-                respuesta = _context4.sent;
-                _context4.next = 42;
+                respuesta = _context5.sent;
+                _context5.next = 42;
                 break;
 
               case 38:
-                form = _this4.producto;
-                _context4.next = 41;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/producto/" + _this4.producto.Id, _this4.producto);
+                form = _this5.producto;
+                _context5.next = 41;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/producto/" + _this5.producto.Id, _this5.producto);
 
               case 41:
-                respuesta = _context4.sent;
+                respuesta = _context5.sent;
 
               case 42:
                 if (respuesta.data.mensaje == "correcto") {
@@ -3000,16 +3062,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 }
 
-                $(_this4.$refs.vueModal).modal("hide");
-                _context4.next = 48;
-                return _this4.init();
+                $(_this5.$refs.vueModal).modal("hide");
+                _context5.next = 48;
+                return _this5.init();
 
               case 48:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4);
+        }, _callee5);
       }))();
     },
     abrirModal: function abrirModal() {
@@ -3051,7 +3113,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Pagination.vue */ "./resources/js/components/Pagination.vue");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3256,13 +3319,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 
- // import pagination from "laravel-vue-pagination";
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Pagination: _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__.default
+    PaginationLaravel: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default())
   },
   data: function data() {
     return {
@@ -3302,16 +3367,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    eliminar: function eliminar(id) {
-      var _this2 = this;
+    getResults: function getResults() {
+      var _arguments = arguments,
+          _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var resultado, res;
+        var page, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
+                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get(_this2.paginacion.path + "?page=" + page);
+
+              case 3:
+                res = _context2.sent;
+                _this2.proveedores = res.data.proveedores.data;
+                _this2.paginacion = res.data.proveedores;
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    eliminar: function eliminar(id) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var resultado, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
                 return sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
                   title: "Estás seguro?",
                   text: "Esta acción no se puede revertir.",
@@ -3323,18 +3415,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 2:
-                resultado = _context2.sent;
+                resultado = _context3.sent;
 
                 if (!resultado.isConfirmed) {
-                  _context2.next = 9;
+                  _context3.next = 9;
                   break;
                 }
 
-                _context2.next = 6;
+                _context3.next = 6;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().delete("/api/proveedor/" + id);
 
               case 6:
-                res = _context2.sent;
+                res = _context3.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
@@ -3345,27 +3437,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 }
 
-                _this2.init();
+                _this3.init();
 
               case 9:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    editar: function editar(proveedor) {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _this3.proveedor = proveedor;
-
-              case 1:
               case "end":
                 return _context3.stop();
             }
@@ -3373,26 +3447,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    guardar: function guardar() {
+    editar: function editar(proveedor) {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        var res, _res;
-
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                if (!_this4.modificar) {
-                  _context4.next = 7;
+                _this4.proveedor = proveedor;
+
+              case 1:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    guardar: function guardar() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        var res, _res;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                if (!_this5.modificar) {
+                  _context5.next = 7;
                   break;
                 }
 
-                _context4.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/proveedor/" + _this4.proveedor.Id, _this4.proveedor);
+                _context5.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/proveedor/" + _this5.proveedor.Id, _this5.proveedor);
 
               case 3:
-                res = _context4.sent;
+                res = _context5.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
@@ -3403,15 +3495,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 }
 
-                _context4.next = 12;
+                _context5.next = 12;
                 break;
 
               case 7:
-                _context4.next = 9;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/proveedor/", _this4.proveedor);
+                _context5.next = 9;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/proveedor/", _this5.proveedor);
 
               case 9:
-                _res = _context4.sent;
+                _res = _context5.sent;
                 console.log(_res.data);
 
                 if (_res.data.mensaje == "correcto") {
@@ -3424,16 +3516,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
               case 12:
-                $(_this4.$refs.vueModal).modal("hide");
-                _context4.next = 15;
-                return _this4.init();
+                $(_this5.$refs.vueModal).modal("hide");
+                _context5.next = 15;
+                return _this5.init();
 
               case 15:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4);
+        }, _callee5);
       }))();
     },
     abrirModal: function abrirModal() {
@@ -4020,7 +4112,7 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
         var seleccionado = this.buscarSeleccionado(this.ultimoAgregado, this.productos); // console.log(seleccionado)
 
         if (this.cantidadSeleccionada <= seleccionado.Existencias) {
-          seleccionado.cantidad = this.cantidadSeleccionada;
+          // seleccionado.cantidad = this.cantidadSeleccionada;
           seleccionado.Existencias = seleccionado.Existencias - this.cantidadSeleccionada;
 
           if (this.carrito.some(function (el) {
@@ -45664,7 +45756,10 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("pagination", { attrs: { array: _vm.paginacion } })
+            _c("paginationLaravel", {
+              attrs: { data: _vm.paginacion },
+              on: { "pagination-change-page": _vm.getResults }
+            })
           ],
           1
         )
@@ -47091,7 +47186,10 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("pagination", { attrs: { array: _vm.paginacion } })
+            _c("paginationLaravel", {
+              attrs: { data: _vm.paginacion },
+              on: { "pagination-change-page": _vm.getResults }
+            })
           ],
           1
         )
@@ -47552,7 +47650,7 @@ var render = function() {
           "div",
           [
             _c("div", { staticClass: "table-responsive" }, [
-              _c("table", { staticClass: "table table-ligth table-hover" }, [
+              _c("table", { staticClass: "table table-light table-hover" }, [
                 _vm._m(0),
                 _vm._v(" "),
                 _c(
@@ -47620,7 +47718,10 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("pagination", { attrs: { array: _vm.paginacion } })
+            _c("paginationLaravel", {
+              attrs: { data: _vm.paginacion },
+              on: { "pagination-change-page": _vm.getResults }
+            })
           ],
           1
         )

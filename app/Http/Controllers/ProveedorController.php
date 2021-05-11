@@ -16,7 +16,7 @@ class ProveedorController extends Controller
     public function index()
     {
         try {
-            $proveedores = Proveedor::paginate(5);
+            $proveedores = Proveedor::paginate(15);
             return response()->json(['mensaje'=>'correcto', 'proveedores'=>$proveedores]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);

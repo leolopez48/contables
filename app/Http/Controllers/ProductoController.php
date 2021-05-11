@@ -17,7 +17,7 @@ class ProductoController extends Controller
     public function index()
     {
         try {
-            $productos = Producto::paginate(5);
+            $productos = Producto::paginate(15);
             return response()->json(['mensaje'=>'correcto', 'productos'=>$productos]);
         } catch (\Throwable $th) {
             return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);

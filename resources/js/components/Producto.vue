@@ -174,7 +174,11 @@
           </tbody>
         </table>
       </div>
-      <pagination :array="paginacion" />
+      <paginationLaravel
+        :data="paginacion"
+        @pagination-change-page="getResults"
+      >
+      </paginationLaravel>
     </div>
   </div>
 </template>
@@ -182,12 +186,10 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-import Pagination from "./Pagination.vue";
+import PaginationLaravel from "laravel-vue-pagination";
 
 export default {
-  components: {
-    Pagination,
-  },
+  components: { PaginationLaravel },
   data() {
     return {
       productos: Array,
@@ -211,6 +213,12 @@ export default {
       this.paginacion = res.data.productos;
       this.compra = {};
       //   console.log(this.paginacion);
+    },
+
+    async getResults(page = 1) {
+      const res = await axios.get(this.paginacion.path + "?page=" + page);
+      this.productos = res.data.productos.data;
+      this.paginacion = res.data.productos;
     },
 
     async eliminar(id) {
