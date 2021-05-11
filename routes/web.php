@@ -18,9 +18,7 @@ Route::get('/', function () {
 });
 
 
-// Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+// Route::group(['middleware' => 'auth'], function () {
     Route::get('/clientes', function () {
         return view('Clientes.Cliente');
     });
@@ -40,12 +38,19 @@ Route::get('/', function () {
     Route::get('/empresa', function () {
         return view('Empresa');
     });
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::resource('/api/cliente', App\Http\Controllers\ClienteController::class);
+    Route::resource('/api/proveedor', App\Http\Controllers\ProveedorController::class);
+    Route::resource('/api/producto', App\Http\Controllers\ProductoController::class);
+    Route::post('/api/detallecompra/compras', [App\Http\Controllers\DetalleCompraController::class, 'obtenerCompras']);
+    Route::post('/api/detallecompra/eliminar', [App\Http\Controllers\DetalleCompraController::class, 'eliminar']);
+    Route::apiResource('/api/detallecompra', App\Http\Controllers\DetalleCompraController::class);
+    Route::resource('/api/empresa', App\Http\Controllers\EmpresaController::class);
+
+    //Ruta para enviar foto y actualizar
+    Route::post('/api/producto/{producto}', [App\Http\Controllers\ProductoController::class, 'update']);
 // });
 
-
-
 Auth::routes();
-
-
-
-// Route::post('/iva', [App\Http\Controllers\HomeController::class, 'prueba']);

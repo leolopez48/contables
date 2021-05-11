@@ -184,6 +184,8 @@ import Swal from "sweetalert2";
 import Pagination from "./Pagination.vue";
 // import pagination from "laravel-vue-pagination";
 
+let csrf = document.head.querySelector('meta[name="csrf-token"]');
+
 export default {
   components: { Pagination },
   data() {
@@ -200,7 +202,7 @@ export default {
   },
   methods: {
     async init() {
-      const res = await axios.get("/api/cliente");
+      const res = await axios.get("/api/cliente", {});
       this.clientes = res.data.clientes.data;
       this.paginacion = res.data.clientes;
       //   console.log(this.paginacion);
@@ -223,7 +225,7 @@ export default {
             title: "Eliminación exitosa.",
             text: "El cliente se ha eliminado.",
             icon: "success",
-            confirmButtonText: "Cool",
+            confirmButtonText: "Hecho",
           });
         }
         this.init();
@@ -249,7 +251,7 @@ export default {
         }
       } else {
         //Insertar
-        const res = await axios.post("/api/cliente/", this.cliente);
+        const res = await axios.post("/api/cliente", this.cliente);
         console.log(res.data);
         if (res.data.mensaje == "correcto") {
           Swal.fire({

@@ -2053,6 +2053,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
  // import pagination from "laravel-vue-pagination";
 
+var csrf = document.head.querySelector('meta[name="csrf-token"]');
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     Pagination: _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__.default
@@ -2080,7 +2081,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/cliente");
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/cliente", {});
 
               case 2:
                 res = _context.sent;
@@ -2134,7 +2135,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     title: "Eliminación exitosa.",
                     text: "El cliente se ha eliminado.",
                     icon: "success",
-                    confirmButtonText: "Cool"
+                    confirmButtonText: "Hecho"
                   });
                 }
 
@@ -2201,7 +2202,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 7:
                 _context4.next = 9;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/cliente/", _this4.cliente);
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/cliente", _this4.cliente);
 
               case 9:
                 _res = _context4.sent;
@@ -3647,6 +3648,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Pagination.vue */ "./resources/js/components/Pagination.vue");
 /* harmony import */ var _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Librerias/calculos */ "./resources/js/Librerias/calculos.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_5__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3657,7 +3660,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
+
 var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
+var csrf = document.getElementsByName('csrf-token')[0].content;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     Pagination: _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__.default
@@ -3686,6 +3691,7 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
     this.compra.total = 0.00;
     this.compra.iva = 0.00;
     this.compra.retencion = 0.00;
+    console.log(csrf);
   },
   methods: {
     init: function init() {
@@ -3742,28 +3748,31 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
                 resultado = _context2.sent;
 
                 if (!resultado.isConfirmed) {
-                  _context2.next = 9;
+                  _context2.next = 10;
                   break;
                 }
 
-                _context2.next = 6;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().delete("/api/detallecompra/" + id);
+                console.log('ID: ' + id);
+                _context2.next = 7;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/detallecompra/eliminar", {
+                  Id: id
+                });
 
-              case 6:
+              case 7:
                 res = _context2.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
                     title: "Eliminación exitosa.",
-                    text: "El detallecompra se ha eliminado.",
+                    text: "El detalle compra se ha eliminado.",
                     icon: "success",
-                    confirmButtonText: "Cool"
+                    confirmButtonText: "Hecho"
                   });
                 }
 
                 _this2.init();
 
-              case 9:
+              case 10:
               case "end":
                 return _context2.stop();
             }
@@ -3771,17 +3780,55 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
         }, _callee2);
       }))();
     },
-    editar: function editar(detallecompra) {
+    editar: function editar(detalleCompra) {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var compra, _proveedor, proveedor, resp, productos;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this3.detallecompra = detallecompra;
+                compra = _this3.compras.find(function (el) {
+                  return el.Id == detalleCompra.compra;
+                });
+                _this3.detallecompra.Id = detalleCompra.Id;
+                _this3.compra = compra;
+                _this3.compra.total = compra.afectas;
 
-              case 1:
+                if (typeof _this3.compra.proveedor != 'number') {
+                  _proveedor = parseInt(_this3.compra.proveedor.split(" ", 1));
+                  _this3.compra.proveedor = _proveedor;
+                }
+
+                proveedor = _this3.proveedores.find(function (el) {
+                  return el.Id == compra.proveedor;
+                });
+                _this3.compra.proveedor = "".concat(proveedor.Id, " - ").concat(proveedor.nombre, " (").concat(proveedor.clasificacion, ")");
+                _context3.next = 9;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/detallecompra/compras', {
+                  "compra": compra.Id
+                });
+
+              case 9:
+                resp = _context3.sent;
+                productos = resp.data.detalleCompras;
+                _this3.carrito = [];
+                productos.forEach(function (el) {
+                  _this3.carrito.push(el);
+                });
+                /*const array = this.productos;
+                this.productosTemp = this.productos;
+                for (let i = 0; i < productos.length; i++) {
+                     if (this.productosTemp.some((el) => el.Id == productos[i].Id)) {
+                        this.productosTemp.splice(productos[i], 1);
+                    }
+                 }*/
+
+                _this3.calcularFecha();
+
+              case 14:
               case "end":
                 return _context3.stop();
             }
@@ -3793,21 +3840,34 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        var res, proveedor, _res;
+        var proveedor, id, res, _proveedor2, _res;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 if (!_this4.modificar) {
-                  _context4.next = 7;
+                  _context4.next = 11;
                   break;
                 }
 
-                _context4.next = 3;
+                if (typeof _this4.compra.proveedor != 'number') {
+                  proveedor = parseInt(_this4.compra.proveedor.split(" ", 1));
+                  _this4.compra.proveedor = proveedor;
+                }
+
+                id = _this4.detallecompra.Id;
+                _this4.compra.condicion = 1;
+                _this4.detallecompra = {
+                  Id: id,
+                  productos: _this4.carrito,
+                  compra: _this4.compra
+                }; // console.log(this.detallecompra)
+
+                _context4.next = 7;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/detallecompra/" + _this4.detallecompra.Id, _this4.detallecompra);
 
-              case 3:
+              case 7:
                 res = _context4.sent;
 
                 if (res.data.mensaje == "correcto") {
@@ -3819,27 +3879,27 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
                   });
                 }
 
-                _context4.next = 14;
+                _context4.next = 17;
                 break;
 
-              case 7:
+              case 11:
                 //Insertar
                 if (typeof _this4.compra.proveedor != 'number') {
-                  proveedor = parseInt(_this4.compra.proveedor.split(" ", 1));
-                  _this4.compra.proveedor = proveedor;
+                  _proveedor2 = parseInt(_this4.compra.proveedor.split(" ", 1));
+                  _this4.compra.proveedor = _proveedor2;
                 }
 
                 _this4.detallecompra = {
                   productos: _this4.carrito,
                   compra: _this4.compra
                 };
-                _context4.next = 11;
+                _context4.next = 15;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/detallecompra/", _this4.detallecompra);
 
-              case 11:
+              case 15:
                 _res = _context4.sent;
-                console.log(_res.data);
 
+                // console.log(res.data);
                 if (_res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
                     title: "Eliminación exitosa.",
@@ -3849,12 +3909,12 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
                   });
                 }
 
-              case 14:
+              case 17:
                 $(_this4.$refs.vueModal).modal("hide");
-                _context4.next = 17;
+                _context4.next = 20;
                 return _this4.init();
 
-              case 17:
+              case 20:
               case "end":
                 return _context4.stop();
             }
@@ -3863,14 +3923,51 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
       }))();
     },
     abrirModal: function abrirModal() {
-      this.detallecompra = {};
+      var _this5 = this;
 
-      if (this.modificar) {
-        this.titulo = "Modificar compra";
-      } else {
-        this.titulo = "Nueva compra";
-        this.calcularFecha();
-      }
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        var respuesta;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _this5.detallecompra = {};
+                _this5.carrito = [];
+                _this5.compra = {};
+
+                if (!_this5.modificar) {
+                  _context5.next = 7;
+                  break;
+                }
+
+                _this5.titulo = "Modificar compra";
+                _context5.next = 14;
+                break;
+
+              case 7:
+                _this5.titulo = "Nueva compra";
+                _context5.next = 10;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/producto/");
+
+              case 10:
+                respuesta = _context5.sent;
+                _this5.productos = respuesta.data.productos.data;
+                _this5.productosTemp = _this5.productos;
+
+                _this5.calcularFecha();
+
+              case 14:
+                _this5.compra.total = 0.00;
+                _this5.compra.iva = 0.00;
+                _this5.compra.retencion = 0.00;
+
+              case 17:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
     },
     calcularFecha: function calcularFecha() {
       var hoy = new Date();
@@ -3881,9 +3978,22 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
         var seleccionado = this.buscarSeleccionado(this.ultimoAgregado, this.productos); // console.log(seleccionado)
 
         if (this.cantidadSeleccionada <= seleccionado.Existencias) {
-          this.totalesCarrito(seleccionado, false);
-          this.carrito.push(seleccionado);
-          this.eliminarProductosTemp(seleccionado);
+          seleccionado.cantidad = this.cantidadSeleccionada;
+          seleccionado.Existencias = seleccionado.Existencias - this.cantidadSeleccionada;
+
+          if (this.carrito.some(function (el) {
+            return el.Id == seleccionado.Id;
+          })) {
+            sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
+              title: "El producto ya fue agregado.",
+              text: "Un producto puede ser agregado una sola vez al carrito.",
+              icon: "error",
+              confirmButtonText: "Hecho"
+            });
+          } else {
+            this.totalesCarrito(seleccionado, false);
+            this.carrito.push(seleccionado);
+          }
         } else {
           sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
             title: "Producto con pocas existencias.",
@@ -3903,39 +4013,44 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
       }
     },
     eliminarProdCarrito: function eliminarProdCarrito(prodCarrito) {
-      var indice = this.carrito.indexOf(prodCarrito);
-      this.productosTemp.push(prodCarrito);
+      var indice = this.carrito.indexOf(prodCarrito); //this.productosTemp.push(prodCarrito);
 
       if (indice > -1) {
         this.carrito.splice(indice, 1);
         var seleccionado = this.productos.find(function (el) {
           return el.Id == prodCarrito.Id;
         });
+        seleccionado.Existencias = seleccionado.Existencias - this.cantidadSeleccionada;
         this.totalesCarrito(seleccionado, true);
       }
     },
     totalesCarrito: function totalesCarrito(seleccionado, eliminandoProducto) {
       var afectas = 0.00;
-      var totalProducto = seleccionado.Precio * this.cantidadSeleccionada;
+      var totalProducto = parseFloat(seleccionado.Precio) * parseInt(this.cantidadSeleccionada);
+      console.log(totalProducto);
       var iva = cal.ivaDeUnNeto(totalProducto); // const empresa = this.empresa.calificacion;
 
       var proveedor = this.buscarSeleccionado(this.compra.proveedor, this.proveedores); // console.log(this.empresa.clasificacion)
+      // console.log(this.empresa.clasificacion, totalProducto, proveedor.clasificacion, 'Compra')
 
-      console.log(this.empresa.clasificacion, totalProducto, proveedor.clasificacion, 'Compra');
-      this.compra.condicion = 'Compra';
+      this.compra.condicion = 1;
       var retencion = cal.retencionNeto(this.empresa.clasificacion, totalProducto, proveedor.clasificacion, 'Compra');
       this.tituloRetencion = retencion.transaccion == 'Retención' ? 'Retención' : 'Percepción';
 
       if (eliminandoProducto) {
-        afectas = totalProducto + iva + retencion.total;
-        this.compra.total -= afectas;
-        this.compra.iva -= iva;
-        this.compra.retencion -= retencion.total;
+        afectas = totalProducto + iva + retencion.total; // console.log(totalProducto, iva, retencion)
+
+        this.compra.total = parseFloat(this.compra.total) - afectas;
+        this.compra.iva = parseFloat(this.compra.iva) + parseFloat(iva);
+        this.compra.retencion = parseFloat(this.compra.retencion) + retencion.total;
       } else {
-        afectas = totalProducto + this.compra.total + iva + retencion.total;
-        this.compra.total = afectas + this.compra.total;
-        this.compra.iva += iva;
-        this.compra.retencion += retencion.total;
+        afectas = totalProducto + parseFloat(this.compra.total) + parseFloat(iva) + retencion.total; // console.log("Total" + this.compra.total)
+        // console.log("iva" + iva)
+        // console.log("Producto" + totalProducto)
+
+        this.compra.total = afectas;
+        this.compra.iva = parseFloat(this.compra.iva) + parseFloat(iva);
+        this.compra.retencion = parseFloat(this.compra.retencion) + retencion.total;
       }
     },
     buscarSeleccionado: function buscarSeleccionado(variable, array) {
@@ -3948,7 +4063,7 @@ var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
     },
     eliminarProductosTemp: function eliminarProductosTemp(seleccionado) {
       var indice = this.productos.indexOf(seleccionado);
-      console.log(indice);
+      console.log("Indice: " + indice);
 
       if (indice > -1) {
         this.productosTemp.splice(indice, 1);
@@ -8468,7 +8583,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.modal-xl[data-v-68d17a60] {\n    width: 60%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.modal-xl[data-v-68d17a60] {\n  width: 60%;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -45589,9 +45704,7 @@ var render = function() {
                   },
                   [
                     _vm._v(
-                      "\n                        " +
-                        _vm._s(_vm.titulo) +
-                        "\n                    "
+                      "\n            " + _vm._s(_vm.titulo) + "\n          "
                     )
                   ]
                 ),
@@ -45602,7 +45715,7 @@ var render = function() {
                     staticClass: "close",
                     attrs: { type: "button", "data-dismiss": "modal" }
                   },
-                  [_vm._v("\n                        ×\n                    ")]
+                  [_vm._v("\n            ×\n          ")]
                 )
               ]),
               _vm._v(" "),
@@ -45615,7 +45728,39 @@ var render = function() {
                         _c(
                           "label",
                           { staticClass: "pt-2", attrs: { for: "" } },
-                          [_vm._v("Id")]
+                          [_vm._v("Id Detalle")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.detallecompra.Id,
+                              expression: "detallecompra.Id"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", disabled: "" },
+                          domProps: { value: _vm.detallecompra.Id },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.detallecompra,
+                                "Id",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          { staticClass: "pt-2", attrs: { for: "" } },
+                          [_vm._v("Id Compra")]
                         ),
                         _vm._v(" "),
                         _c("input", {
@@ -45766,13 +45911,13 @@ var render = function() {
                       _vm._l(_vm.proveedores, function(prov) {
                         return _c("option", { key: prov.Id }, [
                           _vm._v(
-                            "\n                                    " +
+                            "\n                  " +
                               _vm._s(prov.Id) +
                               " - " +
                               _vm._s(prov.nombre) +
                               " (" +
                               _vm._s(prov.clasificacion) +
-                              ")\n                                "
+                              ")\n                "
                           )
                         ])
                       }),
@@ -45856,11 +46001,11 @@ var render = function() {
                               { key: pro.Id, attrs: { "v-value": pro.Id } },
                               [
                                 _vm._v(
-                                  "\n                                            " +
+                                  "\n                      " +
                                     _vm._s(pro.Id) +
-                                    "\n                                            -\n                                            " +
+                                    "\n                      -\n                      " +
                                     _vm._s(pro.Nombre) +
-                                    "\n                                        "
+                                    "\n                    "
                                 )
                               ]
                             )
@@ -45944,7 +46089,6 @@ var render = function() {
                                 "tbody",
                                 { ref: "tablaCarrito" },
                                 [
-                                  _vm.carrito.length > 0 ? _c("tr") : _vm._e(),
                                   _vm._l(_vm.carrito, function(carrito) {
                                     return _c("tr", { key: carrito.Id }, [
                                       _c("td", [_vm._v(_vm._s(carrito.Id))]),
@@ -46031,11 +46175,7 @@ var render = function() {
                     staticClass: "btn btn-default",
                     attrs: { type: "button", "data-dismiss": "modal" }
                   },
-                  [
-                    _vm._v(
-                      "\n                        Close\n                    "
-                    )
-                  ]
+                  [_vm._v("\n            Close\n          ")]
                 ),
                 _vm._v(" "),
                 _c(
@@ -46049,11 +46189,7 @@ var render = function() {
                       }
                     }
                   },
-                  [
-                    _vm._v(
-                      "\n                        Guardar\n                    "
-                    )
-                  ]
+                  [_vm._v("\n            Guardar\n          ")]
                 )
               ])
             ])

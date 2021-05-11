@@ -31,10 +31,11 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $cliente = new Cliente();
-        $id=DB::table('cliente')->latest('Id')->first();
-        $cliente->Id = $id->Id+1;
-        $cliente->create($request->all());
+        // $cliente = new Cliente();
+        // $id=DB::table('cliente')->latest('Id')->first();
+        // dd($id);
+        // $cliente->Id = $id->Id+1;
+        Cliente::insert($request->all());
         return response()->json(['cliente'=>$request->all()]);
     }
 

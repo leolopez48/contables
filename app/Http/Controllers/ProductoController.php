@@ -32,7 +32,7 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $fullUrl = "";
+        $url = "";
         $producto = new producto();
 
         $id=DB::table('producto')->latest('Id')->first();
@@ -44,10 +44,16 @@ class ProductoController extends Controller
         }
 
         $producto = $request->except(['Imagen']);
-        $producto["Id"] = $id->Id+1;
+        if ($id == null) {
+            // dd($id);
+            // $id = 1;
+            $producto["Id"] = 1;
+        } else {
+            $producto["Id"] = $id->Id+1;
+        }
         $producto["Imagen"] = $url;
-
         Producto::insert([$producto]);
+
 
         return response()->json(['mensaje'=>'correcto', 'producto'=>$producto]);
     }

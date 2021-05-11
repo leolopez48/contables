@@ -10,6 +10,7 @@ use App\Models\Empresa;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
+use DB;
 
 class DetalleCompraController extends Controller
 {
@@ -45,24 +46,35 @@ class DetalleCompraController extends Controller
      */
     public function store(Request $request)
     {
-        $usuario = $request;
-        dd(optional(Auth::user())->id);
+        $usuario = Auth::user()->name;
+
+        $compra = new Compra();
+
+        $compra->condiciones = $request->compra["condicion"];
+        $compra->fecha = $request->compra["fecha"];
+        $compra->iva = $request->compra["iva"];
+        $compra->retencion = $request->compra["retencion"];
+        $compra->afectas = $request->compra["total"];
+        $compra->registrado_por = $usuario;
+        $compra->proveedor = $request->compra["proveedor"];
+
+        $compra->save();
+
+        $compra = DB::table('compra')->latest('Id')->first();
+
         foreach ($request->productos as $pro) {
-            $compra = new Compra();
-            // $compra->Id = $pro->Id;
-            $compra->condiciones = $pro->condicion;
-            $compra->fecha = $pro->fecha;
-            $compra->iva = $pro->iva;
-            $compra->retencion = $pro->retencion;
-            $compra->afectas = $pro->total;
-            $compra->registrado_por = $usuario;
-            $compra->proveedor = $pro->proveedor;
-            return response()->json([$compra]);
+            $det = new DetalleCompra();
+            $det->compra = $compra->Id;
+            $det->producto = (int)$pro["Id"];
+            $det->price = (double)$pro["Precio"];
+            $det->cant = (int)$pro["cantidad"];
+            $det->save();
+            $cantidadAnterior = Producto::find($det->producto);
+            // $id = DB::table('producto')->latest('Id')->first();
+            // dd($id->Id);
+            $nuevaExistencia = (int)$cantidadAnterior["Existencias"]-(int)$det->cant;
+            DB::table('producto')->where('Id', $det->producto)->update(['Existencias'=> $nuevaExistencia]);
         }
-        // $detallecompra = new DetalleCompra();
-        // $id=DB::table('detalle_compra')->latest('Id')->first();
-        // $detallecompra->Id = $id;
-        // $detallecompra->create($request->all());
     }
 
     /**
@@ -73,7 +85,12 @@ class DetalleCompraController extends Controller
      */
     public function show(DetalleCompra $detalleCompra)
     {
-        //
+        // dd($detalleCompra);
+        $detalleCompras = DB::table('detalle_compra')
+        ->where(['compra'=>$detalleCompra->compra])
+        ->join('producto', 'producto.Id', '=', 'detallecompra.Id')
+        ->get();
+        return response()->json(['detalleCompras'=>$detalleCompras]);
     }
 
     /**
@@ -85,7 +102,68 @@ class DetalleCompraController extends Controller
      */
     public function update(Request $request, DetalleCompra $detalleCompra)
     {
-        //
+        $usuario = Auth::user()->name;
+        $id = $request->Id;
+
+        $compra = new Compra();
+        // dd($request->compra["condicion"]);
+        $compra->exists = true;
+        $compra->Id = $request->compra["Id"];
+        $compra->condiciones = $request->compra["condicion"];
+        $compra->fecha = $request->compra["fecha"];
+        $compra->iva = $request->compra["iva"];
+        $compra->retencion = $request->compra["retencion"];
+        $compra->afectas = $request->compra["total"];
+        $compra->registrado_por = $usuario;
+        $compra->proveedor = $request->compra["proveedor"];
+
+        // $compras = Compras::where(['Id'=>$compra->Id]);
+        // $detalles = DetalleCompra::where(['compra'=>$compra->Id]);
+        // dd($compras, $detalles);
+        // $det = DB::table('detalle_compra')->where(['Id'=>$request->Id])->first();
+        // $pro = DB::table('producto')->where(['Id'=>$det->producto])->first();
+
+        // $cantidadAnterior = $pro->Existencias;
+        // $nuevaExistencia = $cantidadAnterior+(int)$det->cant;
+        // DB::table('producto')->where('Id', $pro->Id)->update(['Existencias'=> $nuevaExistencia]);
+
+        DB::table('detalle_compra')->where(['compra'=>$compra->Id])->delete();
+        DB::table('compra')->where(['Id'=>$compra->Id])->delete();
+
+        Compra::create([
+        'Id'=>$compra->Id,
+        'condiciones'=>$compra->condiciones,
+        'fecha'=>$compra->fecha,
+        'iva'=>$compra->iva,
+        'retencion'=>$compra->retencion,
+        'afectas'=>$compra->afectas,
+        'registrado_por'=>$compra->registrado_por,
+        'proveedor'=>$compra->proveedor]);
+
+        foreach ($request->productos as $pro) {
+            $det = new DetalleCompra();
+            $det->exists = true;
+            $det->Id = $id;
+            // dd($det->Id);
+            $det->compra = $compra->Id;
+            $det->producto = (int)$pro["Id"];
+            $det->price = (double)$pro["Precio"];
+            $det->cant = (int)$pro["cantidad"];
+
+            DB::table('producto')->where(['Id'=>$det->producto])->update(['Existencias'=>$pro["Existencias"]]);
+
+            // $det->save();
+            DetalleCompra::create([
+                'Id'=>$det->Id,
+                'compra'=>$det->compra,
+                'producto'=>$det->producto,
+                'cant'=>$det->cant,
+                'price'=>$det->price,
+            ]);
+        }
+        // $compra->save();
+
+        // $compra = DB::table('compra')->latest('Id')->first();
     }
 
     /**
@@ -96,6 +174,36 @@ class DetalleCompraController extends Controller
      */
     public function destroy(DetalleCompra $detalleCompra)
     {
-        //
+        try {
+            DetalleCompra::where('Id', $detalleCompra->Id)->dd();
+            return response()->json(['mensaje'=>'correcto']);
+        } catch (\Throwable $th) {
+            return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
+        }
+    }
+
+    public function eliminar(Request $request)
+    {
+        try {
+            $det = DB::table('detalle_compra')->where(['Id'=>$request->Id])->first();
+            $pro = DB::table('producto')->where(['Id'=>$det->producto])->first();
+            $cantidadAnterior = $pro->Existencias;
+            $nuevaExistencia = $cantidadAnterior+(int)$det->cant;
+            DB::table('producto')->where('Id', $pro->Id)->update(['Existencias'=> $nuevaExistencia]);
+            DetalleCompra::where('Id', $request->Id)->delete();
+            return response()->json(['mensaje'=>'correcto']);
+        } catch (\Throwable $th) {
+            return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
+        }
+    }
+
+    public function obtenerCompras(Request $request)
+    {
+        $detalleCompras = DB::table('detalle_compra')
+        ->select('producto.*', 'detalle_compra.cant as cantidad')
+        ->join('producto', 'detalle_compra.producto', '=', 'producto.Id')
+        ->where('detalle_compra.compra', $request->compra)
+        ->get();
+        return response()->json(['detalleCompras'=>$detalleCompras]);
     }
 }
