@@ -276,7 +276,11 @@
         </table>
       </div>
     </div>
-    <pagination :array="paginacion" />
+    <paginationLaravel :data="paginacion" @pagination-change-page="getResults">
+    </paginationLaravel>
+    <!-- <div v-if="paginacion.current_page"> // El if porque sino se renderiza antes de crear los datos y envía un vacío como prop
+      <pagination :array="paginacion" />
+    </div> -->
   </div>
 </template>
 

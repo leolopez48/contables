@@ -1,22 +1,20 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-import Pagination from "../Pagination.vue";
+import PaginationLaravel from "laravel-vue-pagination";
 import Calculos from "../../Librerias/calculos"
-import {
-    indexOf
-} from "lodash";
 
 const cal = new Calculos();
 const csrf = document.getElementsByName('csrf-token')[0].content;
 
 export default {
     components: {
-        Pagination
+        PaginationLaravel
     },
 
     data() {
         return {
             detallecompras: Array,
+            // detallecomprasMod: "",
             compras: [],
             compra: {},
             productos: [],
@@ -39,20 +37,30 @@ export default {
         this.compra.total = 0.00;
         this.compra.iva = 0.00;
         this.compra.retencion = 0.00;
-        console.log(csrf)
+        // console.log(csrf)
     },
 
     methods: {
         async init() {
             const res = await axios.get("/api/detallecompra");
             this.detallecompras = res.data.detallecompras.data;
+            // this.paginacion = JSON.stringify(res.data.detallecompras.data);
             this.compras = res.data.compras;
             this.productos = res.data.productos;
             this.productosTemp = res.data.productos;
             this.proveedores = res.data.proveedores;
             this.paginacion = res.data.detallecompras;
+            // console.log(JSON.parse(JSON.stringify(this.paginacion)))
+            // this.paginacion = JSON.stringify(this.paginacion)
             this.empresa = res.data.empresa;
             // this.$refs.selectProductos.disabled = true;
+        },
+
+        async getResults(page = 1) {
+            const res = await axios.get(this.paginacion.path + "?page=" + page);
+            this.detallecompras = res.data.detallecompras.data;
+            this.paginacion = res.data.detallecompras;
+            // console.log(res.data);
         },
 
         async eliminar(id) {

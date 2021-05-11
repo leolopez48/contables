@@ -1,37 +1,38 @@
 <template>
   <div class="text-center m-3">
     <!-- Paginacion -->
-    <pagination1 :data="array" @pagination-change-page="getResults">
-    </pagination1>
+    <paginationLaravel :data="data" @pagination-change-page="getResults">
+    </paginationLaravel>
   </div>
 </template>
 
 <script>
-import pagination1 from "laravel-vue-pagination";
+import paginationLaravel from "laravel-vue-pagination";
 export default {
-  components: { pagination1 },
+  components: { paginationLaravel },
   props: {
     array: {
       type: Object,
-      default: {},
-      required: true,
+      default: () => ({}),
     },
   },
   data() {
     return {
-      laravelData: { ...this.array },
+      data: {},
     };
   },
   mounted() {
-    // console.log(JSON.stringify(this));
-    const data = JSON.stringify(this.array);
-    console.log(data);
+    this.init();
   },
   methods: {
+    async init() {
+      const data = this.array;
+      this.data = data;
+    },
     async getResults(page = 1) {
-      //   console.log(this.$props.array.path);
-      const res = await axios.get(this.laravelData.path + "?page=" + page);
-      this.array = res.data;
+      const res = await axios.get(this.data.path + "?page=" + page);
+      this.data = res.data.detallecompras;
+      console.log(res.data);
     },
   },
 };

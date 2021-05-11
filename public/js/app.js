@@ -2484,12 +2484,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -2501,50 +2495,70 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    pagination1: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1___default())
+    paginationLaravel: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1___default())
   },
   props: {
     array: {
       type: Object,
-      "default": {},
-      required: true
+      "default": function _default() {
+        return {};
+      }
     }
   },
   data: function data() {
     return {
-      laravelData: _objectSpread({}, this.array)
+      data: {}
     };
   },
   mounted: function mounted() {
-    // console.log(JSON.stringify(this));
-    var data = JSON.stringify(this.array);
-    console.log(data);
+    this.init();
   },
   methods: {
-    getResults: function getResults() {
-      var _arguments = arguments,
-          _this = this;
+    init: function init() {
+      var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var page, res;
+        var data;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
-                _context.next = 3;
-                return axios.get(_this.laravelData.path + "?page=" + page);
+                data = _this.array;
+                _this.data = data;
 
-              case 3:
-                res = _context.sent;
-                _this.array = res.data;
-
-              case 5:
+              case 2:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
+      }))();
+    },
+    getResults: function getResults() {
+      var _arguments = arguments,
+          _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var page, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+                _context2.next = 3;
+                return axios.get(_this2.data.path + "?page=" + page);
+
+              case 3:
+                res = _context2.sent;
+                _this2.data = res.data.detallecompras;
+                console.log(res.data);
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     }
   }
@@ -3646,10 +3660,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Pagination.vue */ "./resources/js/components/Pagination.vue");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js");
+/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Librerias/calculos */ "./resources/js/Librerias/calculos.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_5__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3660,16 +3673,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
-
 var cal = new _Librerias_calculos__WEBPACK_IMPORTED_MODULE_4__.default();
 var csrf = document.getElementsByName('csrf-token')[0].content;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Pagination: _Pagination_vue__WEBPACK_IMPORTED_MODULE_3__.default
+    PaginationLaravel: (laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_3___default())
   },
   data: function data() {
     return {
       detallecompras: Array,
+      // detallecomprasMod: "",
       compras: [],
       compra: {},
       productos: [],
@@ -3690,8 +3703,7 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
     this.init();
     this.compra.total = 0.00;
     this.compra.iva = 0.00;
-    this.compra.retencion = 0.00;
-    console.log(csrf);
+    this.compra.retencion = 0.00; // console.log(csrf)
   },
   methods: {
     init: function init() {
@@ -3708,12 +3720,15 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
 
               case 2:
                 res = _context.sent;
-                _this.detallecompras = res.data.detallecompras.data;
+                _this.detallecompras = res.data.detallecompras.data; // this.paginacion = JSON.stringify(res.data.detallecompras.data);
+
                 _this.compras = res.data.compras;
                 _this.productos = res.data.productos;
                 _this.productosTemp = res.data.productos;
                 _this.proveedores = res.data.proveedores;
-                _this.paginacion = res.data.detallecompras;
+                _this.paginacion = res.data.detallecompras; // console.log(JSON.parse(JSON.stringify(this.paginacion)))
+                // this.paginacion = JSON.stringify(this.paginacion)
+
                 _this.empresa = res.data.empresa; // this.$refs.selectProductos.disabled = true;
 
               case 10:
@@ -3724,16 +3739,43 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
         }, _callee);
       }))();
     },
-    eliminar: function eliminar(id) {
-      var _this2 = this;
+    getResults: function getResults() {
+      var _arguments = arguments,
+          _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var resultado, res;
+        var page, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
+                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get(_this2.paginacion.path + "?page=" + page);
+
+              case 3:
+                res = _context2.sent;
+                _this2.detallecompras = res.data.detallecompras.data;
+                _this2.paginacion = res.data.detallecompras; // console.log(res.data);
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    eliminar: function eliminar(id) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var resultado, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
                 return sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
                   title: "Estás seguro?",
                   text: "Esta acción no se puede revertir.",
@@ -3745,21 +3787,21 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
                 });
 
               case 2:
-                resultado = _context2.sent;
+                resultado = _context3.sent;
 
                 if (!resultado.isConfirmed) {
-                  _context2.next = 10;
+                  _context3.next = 10;
                   break;
                 }
 
                 console.log('ID: ' + id);
-                _context2.next = 7;
+                _context3.next = 7;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/detallecompra/eliminar", {
                   Id: id
                 });
 
               case 7:
-                res = _context2.sent;
+                res = _context3.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
@@ -3770,53 +3812,53 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
                   });
                 }
 
-                _this2.init();
+                _this3.init();
 
               case 10:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       }))();
     },
     editar: function editar(detalleCompra) {
-      var _this3 = this;
+      var _this4 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
         var compra, _proveedor, proveedor, resp, productos;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                compra = _this3.compras.find(function (el) {
+                compra = _this4.compras.find(function (el) {
                   return el.Id == detalleCompra.compra;
                 });
-                _this3.detallecompra.Id = detalleCompra.Id;
-                _this3.compra = compra;
-                _this3.compra.total = compra.afectas;
+                _this4.detallecompra.Id = detalleCompra.Id;
+                _this4.compra = compra;
+                _this4.compra.total = compra.afectas;
 
-                if (typeof _this3.compra.proveedor != 'number') {
-                  _proveedor = parseInt(_this3.compra.proveedor.split(" ", 1));
-                  _this3.compra.proveedor = _proveedor;
+                if (typeof _this4.compra.proveedor != 'number') {
+                  _proveedor = parseInt(_this4.compra.proveedor.split(" ", 1));
+                  _this4.compra.proveedor = _proveedor;
                 }
 
-                proveedor = _this3.proveedores.find(function (el) {
+                proveedor = _this4.proveedores.find(function (el) {
                   return el.Id == compra.proveedor;
                 });
-                _this3.compra.proveedor = "".concat(proveedor.Id, " - ").concat(proveedor.nombre, " (").concat(proveedor.clasificacion, ")");
-                _context3.next = 9;
+                _this4.compra.proveedor = "".concat(proveedor.Id, " - ").concat(proveedor.nombre, " (").concat(proveedor.clasificacion, ")");
+                _context4.next = 9;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/detallecompra/compras', {
                   "compra": compra.Id
                 });
 
               case 9:
-                resp = _context3.sent;
+                resp = _context4.sent;
                 productos = resp.data.detalleCompras;
-                _this3.carrito = [];
+                _this4.carrito = [];
                 productos.forEach(function (el) {
-                  _this3.carrito.push(el);
+                  _this4.carrito.push(el);
                 });
                 /*const array = this.productos;
                 this.productosTemp = this.productos;
@@ -3826,49 +3868,49 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
                     }
                  }*/
 
-                _this3.calcularFecha();
+                _this4.calcularFecha();
 
               case 14:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3);
+        }, _callee4);
       }))();
     },
     guardar: function guardar() {
-      var _this4 = this;
+      var _this5 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
         var proveedor, id, res, _proveedor2, _res;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                if (!_this4.modificar) {
-                  _context4.next = 11;
+                if (!_this5.modificar) {
+                  _context5.next = 11;
                   break;
                 }
 
-                if (typeof _this4.compra.proveedor != 'number') {
-                  proveedor = parseInt(_this4.compra.proveedor.split(" ", 1));
-                  _this4.compra.proveedor = proveedor;
+                if (typeof _this5.compra.proveedor != 'number') {
+                  proveedor = parseInt(_this5.compra.proveedor.split(" ", 1));
+                  _this5.compra.proveedor = proveedor;
                 }
 
-                id = _this4.detallecompra.Id;
-                _this4.compra.condicion = 1;
-                _this4.detallecompra = {
+                id = _this5.detallecompra.Id;
+                _this5.compra.condicion = 1;
+                _this5.detallecompra = {
                   Id: id,
-                  productos: _this4.carrito,
-                  compra: _this4.compra
+                  productos: _this5.carrito,
+                  compra: _this5.compra
                 }; // console.log(this.detallecompra)
 
-                _context4.next = 7;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/detallecompra/" + _this4.detallecompra.Id, _this4.detallecompra);
+                _context5.next = 7;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().put("/api/detallecompra/" + _this5.detallecompra.Id, _this5.detallecompra);
 
               case 7:
-                res = _context4.sent;
+                res = _context5.sent;
 
                 if (res.data.mensaje == "correcto") {
                   sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
@@ -3879,25 +3921,25 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
                   });
                 }
 
-                _context4.next = 17;
+                _context5.next = 17;
                 break;
 
               case 11:
                 //Insertar
-                if (typeof _this4.compra.proveedor != 'number') {
-                  _proveedor2 = parseInt(_this4.compra.proveedor.split(" ", 1));
-                  _this4.compra.proveedor = _proveedor2;
+                if (typeof _this5.compra.proveedor != 'number') {
+                  _proveedor2 = parseInt(_this5.compra.proveedor.split(" ", 1));
+                  _this5.compra.proveedor = _proveedor2;
                 }
 
-                _this4.detallecompra = {
-                  productos: _this4.carrito,
-                  compra: _this4.compra
+                _this5.detallecompra = {
+                  productos: _this5.carrito,
+                  compra: _this5.compra
                 };
-                _context4.next = 15;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/detallecompra/", _this4.detallecompra);
+                _context5.next = 15;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/detallecompra/", _this5.detallecompra);
 
               case 15:
-                _res = _context4.sent;
+                _res = _context5.sent;
 
                 // console.log(res.data);
                 if (_res.data.mensaje == "correcto") {
@@ -3910,63 +3952,63 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
                 }
 
               case 17:
-                $(_this4.$refs.vueModal).modal("hide");
-                _context4.next = 20;
-                return _this4.init();
+                $(_this5.$refs.vueModal).modal("hide");
+                _context5.next = 20;
+                return _this5.init();
 
               case 20:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    abrirModal: function abrirModal() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
-        var respuesta;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _this5.detallecompra = {};
-                _this5.carrito = [];
-                _this5.compra = {};
-
-                if (!_this5.modificar) {
-                  _context5.next = 7;
-                  break;
-                }
-
-                _this5.titulo = "Modificar compra";
-                _context5.next = 14;
-                break;
-
-              case 7:
-                _this5.titulo = "Nueva compra";
-                _context5.next = 10;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/producto/");
-
-              case 10:
-                respuesta = _context5.sent;
-                _this5.productos = respuesta.data.productos.data;
-                _this5.productosTemp = _this5.productos;
-
-                _this5.calcularFecha();
-
-              case 14:
-                _this5.compra.total = 0.00;
-                _this5.compra.iva = 0.00;
-                _this5.compra.retencion = 0.00;
-
-              case 17:
               case "end":
                 return _context5.stop();
             }
           }
         }, _callee5);
+      }))();
+    },
+    abrirModal: function abrirModal() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
+        var respuesta;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _this6.detallecompra = {};
+                _this6.carrito = [];
+                _this6.compra = {};
+
+                if (!_this6.modificar) {
+                  _context6.next = 7;
+                  break;
+                }
+
+                _this6.titulo = "Modificar compra";
+                _context6.next = 14;
+                break;
+
+              case 7:
+                _this6.titulo = "Nueva compra";
+                _context6.next = 10;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/producto/");
+
+              case 10:
+                respuesta = _context6.sent;
+                _this6.productos = respuesta.data.productos.data;
+                _this6.productosTemp = _this6.productos;
+
+                _this6.calcularFecha();
+
+              case 14:
+                _this6.compra.total = 0.00;
+                _this6.compra.iva = 0.00;
+                _this6.compra.retencion = 0.00;
+
+              case 17:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
       }))();
     },
     calcularFecha: function calcularFecha() {
@@ -46283,7 +46325,10 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _c("pagination", { attrs: { array: _vm.paginacion } })
+      _c("paginationLaravel", {
+        attrs: { data: _vm.paginacion },
+        on: { "pagination-change-page": _vm.getResults }
+      })
     ],
     1
   )
@@ -46616,8 +46661,8 @@ var render = function() {
     "div",
     { staticClass: "text-center m-3" },
     [
-      _c("pagination1", {
-        attrs: { data: _vm.array },
+      _c("paginationLaravel", {
+        attrs: { data: _vm.data },
         on: { "pagination-change-page": _vm.getResults }
       })
     ],
