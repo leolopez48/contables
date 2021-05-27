@@ -4112,7 +4112,7 @@ var csrf = document.getElementsByName('csrf-token')[0].content;
         var seleccionado = this.buscarSeleccionado(this.ultimoAgregado, this.productos); // console.log(seleccionado)
 
         if (this.cantidadSeleccionada <= seleccionado.Existencias) {
-          // seleccionado.cantidad = this.cantidadSeleccionada;
+          seleccionado.cantidad = this.cantidadSeleccionada;
           seleccionado.Existencias = seleccionado.Existencias - this.cantidadSeleccionada;
 
           if (this.carrito.some(function (el) {

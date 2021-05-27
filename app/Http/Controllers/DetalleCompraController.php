@@ -22,7 +22,7 @@ class DetalleCompraController extends Controller
     public function index()
     {
         try {
-            $detallecompras = DetalleCompra::paginate(15);
+            $detallecompras = DetalleCompra::paginate(5);
             $compra = Compra::get();
             $producto= Producto::get();
             $proveedor= Proveedor::get();
@@ -67,6 +67,7 @@ class DetalleCompraController extends Controller
             $det->compra = $compra->Id;
             $det->producto = (int)$pro["Id"];
             $det->price = (double)$pro["Precio"];
+            // dd($pro);
             $det->cant = (int)$pro["cantidad"];
             $det->save();
             $cantidadAnterior = Producto::find($det->producto);
