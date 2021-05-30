@@ -2,6 +2,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import PaginationLaravel from "laravel-vue-pagination";
 import Calculos from "../../Librerias/calculos"
+// import mdiAndroid from '@mdi/js'
 
 const cal = new Calculos();
 const csrf = document.getElementsByName('csrf-token')[0].content;
@@ -28,6 +29,8 @@ export default {
             cantidadSeleccionada: 1,
             empresa: {},
             tituloRetencion: 'Percepción',
+            listaProv: [],
+            listaProd: [],
             productosTemp: [],
         };
     },
@@ -49,6 +52,15 @@ export default {
             this.productos = res.data.productos;
             this.productosTemp = res.data.productos;
             this.proveedores = res.data.proveedores;
+
+            this.proveedores.forEach(el => {
+                this.listaProv.push(`${el.Id} - ${el.nombre} (${el.clasificacion})`)
+            });
+
+            this.productos.forEach(el => {
+                this.listaProd.push(`${el.Id} - ${el.Nombre}`)
+            });
+
             this.paginacion = res.data.detallecompras;
             // console.log(JSON.parse(JSON.stringify(this.paginacion)))
             // this.paginacion = JSON.stringify(this.paginacion)
@@ -220,7 +232,7 @@ export default {
                 if (this.cantidadSeleccionada <= seleccionado.Existencias) {
 
                     seleccionado.cantidad = this.cantidadSeleccionada;
-                    seleccionado.Existencias = seleccionado.Existencias - this.cantidadSeleccionada;
+                    seleccionado.Existencias = parseInt(seleccionado.Existencias) + parseInt(this.cantidadSeleccionada);
 
                     if (this.carrito.some((el) => el.Id == seleccionado.Id)) {
                         Swal.fire({

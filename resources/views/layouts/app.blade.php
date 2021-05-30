@@ -27,7 +27,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+            <div class="container p-0">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -40,6 +40,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
+                    @auth()
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -61,8 +62,10 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" aria-current="page" href="{{url('/detallecompra')}}">Detalle Compras</a>
+                            <a class="dropdown-item" aria-current="page" href="{{url('/detalleventa')}}">Detalle Ventas</a>
                             </div>
                           </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->

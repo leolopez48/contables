@@ -2,7 +2,9 @@
   <div class="container">
     <!-- Modal -->
     <div id="myModal" ref="vueModal" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-xl">
+      <div
+        class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"
+      >
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
@@ -16,7 +18,7 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-md-12">
-                <h5 class="mt-1">Resumen</h5>
+                <h5 class="mt-1 pb-0">Resumen</h5>
                 <hr />
               </div>
 
@@ -52,8 +54,8 @@
                                 </select>
                             </div> -->
 
-              <div class="col-md-4 col-sm-12">
-                <label for="" class="pt-2">Total</label>
+              <div class="col-md-4 col-sm-12 pt-0">
+                <label for="" class="pt-0">Total</label>
                 <input
                   type="number"
                   step="0.01"
@@ -63,8 +65,8 @@
                 />
               </div>
 
-              <div class="col-md-4 col-sm-12">
-                <label for="" class="pt-2">IVA</label>
+              <div class="col-md-4 col-sm-12 pt-0">
+                <label for="" class="pt-0">IVA</label>
                 <input
                   type="number"
                   step="0.01"
@@ -74,8 +76,8 @@
                 />
               </div>
 
-              <div class="col-md-4 col-sm-12">
-                <label for="" class="pt-2">{{ tituloRetencion }}</label>
+              <div class="col-md-4 col-sm-12 pt-0">
+                <label for="" class="pt-0">{{ tituloRetencion }}</label>
                 <input
                   type="number"
                   step="0.01"
@@ -87,11 +89,14 @@
 
               <div class="col-md-6 col-sm-12">
                 <label for="" class="pt-2">Proveedor</label>
-                <select class="custom-select" v-model="compra.proveedor">
-                  <option v-for="prov in proveedores" :key="prov.Id">
-                    {{ prov.Id }} - {{ prov.nombre }} ({{ prov.clasificacion }})
-                  </option>
-                </select>
+                <div data-app>
+                  <v-combobox
+                    v-model="compra.proveedor"
+                    dense
+                    outlined
+                    :items="listaProv"
+                  ></v-combobox>
+                </div>
               </div>
 
               <div class="col-md-5 col-sm-12">
@@ -104,29 +109,23 @@
                 />
               </div>
 
-              <div class="col-md-12">
-                <h5 class="mt-3">Productos</h5>
+              <div class="col-md-12 pt-0 mt-0">
+                <h5 class="mt-0">Productos</h5>
                 <hr />
                 <div class="row">
                   <div class="col-md-4">
-                    <label for="" class="pt-2">Producto</label>
-                    <select
-                      class="custom-select"
-                      v-model="ultimoAgregado"
-                      ref="selectProductos"
-                    >
-                      <option
-                        v-for="pro in productosTemp"
-                        :key="pro.Id"
-                        :v-value="pro.Id"
-                      >
-                        {{ pro.Id }}
-                        -
-                        {{ pro.Nombre }}
-                      </option>
-                    </select>
+                    <label for="" class="pt-0">Producto</label>
+                    <div data-app>
+                      <v-combobox
+                        v-model="ultimoAgregado"
+                        dense
+                        outlined
+                        clearable
+                        :items="listaProd"
+                      ></v-combobox>
+                    </div>
                   </div>
-                  <div class="col-md-4 col-sm-12">
+                  <div class="col-md-4 col-sm-12 pt-0">
                     <label for="" class="pt-2">Cantidad</label>
                     <input
                       type="number"
@@ -182,11 +181,11 @@
                             <td>{{ carrito.Codigo }}</td>
                             <a
                               href="#"
-                              class="btn btn-danger mt-1"
+                              class="btn btn-default mt-1"
                               title="Eliminar"
                               @click="eliminarProdCarrito(carrito)"
                             >
-                              <i class="fas fa-trash"></i>
+                              <i class="fas fa-trash fa-15x"></i>
                             </a>
                           </tr>
                           <!-- </tr> -->
@@ -251,7 +250,7 @@
               <td>
                 <a
                   href="#"
-                  class="btn btn-secondary mt-1"
+                  class="mt-1"
                   @click="
                     modificar = true;
                     abrirModal();
@@ -261,14 +260,14 @@
                   data-toggle="modal"
                   data-target="#myModal"
                 >
-                  <i class="fas fa-edit"></i>
+                  <i class="fas fa-edit fa-15x"></i>
                 </a>
                 <a
                   href="#"
-                  class="btn btn-danger mt-1"
+                  class="mt-1"
                   title="Eliminar"
                   @click="eliminar(det.Id)"
-                  ><i class="fas fa-trash"></i
+                  ><i class="fas fa-trash fa-15x"></i
                 ></a>
               </td>
             </tr>
@@ -288,8 +287,11 @@
 </script>
 
 <style scoped>
-.modal-xl {
+/* .modal-xl {
   width: 60%;
+} */
+
+.fa-15x {
+  font-size: 20px;
 }
 </style>
-../Pagination.vue

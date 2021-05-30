@@ -32,6 +32,10 @@ Route::get('/', function () {
         return view('DetalleCompra.DetalleCompra');
     });
 
+    Route::get('/detalleventa', function () {
+        return view('DetalleVenta.DetalleVenta');
+    });
+
     Route::get('/productos', function () {
         return view('Productos.Producto');
     });
@@ -47,6 +51,9 @@ Route::get('/', function () {
     Route::post('/api/detallecompra/compras', [App\Http\Controllers\DetalleCompraController::class, 'obtenerCompras']);
     Route::post('/api/detallecompra/eliminar', [App\Http\Controllers\DetalleCompraController::class, 'eliminar']);
     Route::apiResource('/api/detallecompra', App\Http\Controllers\DetalleCompraController::class);
+    Route::apiResource('/api/detalleventa', App\Http\Controllers\DetalleVentaController::class);
+    Route::apiResource('/api/documento', App\Http\Controllers\DocumentoController::class);
+    Route::apiResource('/api/documentoserie', App\Http\Controllers\DocumentoSerieController::class);
     Route::resource('/api/empresa', App\Http\Controllers\EmpresaController::class);
 
     //Ruta para enviar foto y actualizar

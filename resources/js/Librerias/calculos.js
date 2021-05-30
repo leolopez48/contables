@@ -43,4 +43,9 @@ export default class Calculos {
             };
         }
     }
+
+    calcularFecha() {
+        const hoy = new Date();
+        return hoy.toISOString().split('T')[0];
+    }
 }

@@ -81,12 +81,10 @@ class ProductoController extends Controller
         try {
             $url = "";
 
-            if ($request->imagenModificada) {
-                if ($request->hasFile('Imagen')) {
-                    $photo = Storage::put('public', $request->Imagen);
-                    $url = Storage::url($photo);
-                    $fullUrl = asset($url);
-                }
+            if ($request->hasFile('Imagen')) {
+                $photo = Storage::put('public', $request->Imagen);
+                $url = Storage::url($photo);
+                $fullUrl = asset($url);
             }
 
             $pro = new Producto();

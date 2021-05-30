@@ -23,14 +23,16 @@ import ClienteComponent from "./components/Cliente.vue";
 import ProveedorComponent from "./components/Proveedor.vue";
 import ProductoComponent from "./components/Producto.vue";
 import DetalleCompraComponent from "./components/DetalleCompra/DetalleCompra.vue";
+import DetalleVentaComponent from "./components/DetalleVenta/DetalleVenta.vue";
 import PaginationComponent from "./components/Pagination.vue";
 import InicioComponent from "./components/Inicio.vue";
-// import JwPagination from 'jw-vue-pagination';
+import Vuetify from 'vuetify'
 
 Vue.component('cliente', ClienteComponent);
 Vue.component('proveedor', ProveedorComponent);
 Vue.component('producto', ProductoComponent);
 Vue.component('detallecompra', DetalleCompraComponent);
+Vue.component('detalleventa', DetalleVentaComponent);
 Vue.component('pagination', PaginationComponent);
 Vue.component('inicio', InicioComponent);
 Vue.component('pagination-vue', require('laravel-vue-pagination'));
@@ -40,7 +42,11 @@ Vue.component('pagination-vue', require('laravel-vue-pagination'));
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+Vue.use(Vuetify)
 
 const app = new Vue({
+    vuetify: new Vuetify({
+        iconfont: 'mdi',
+    }),
     el: '#app',
 });

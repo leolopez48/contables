@@ -7,6 +7,7 @@ use App\Models\Compra;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\Empresa;
+use App\Models\Movimiento;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
@@ -22,7 +23,7 @@ class DetalleCompraController extends Controller
     public function index()
     {
         try {
-            $detallecompras = DetalleCompra::paginate(5);
+            $detallecompras = DetalleCompra::paginate(2);
             $compra = Compra::get();
             $producto= Producto::get();
             $proveedor= Proveedor::get();
@@ -65,16 +66,34 @@ class DetalleCompraController extends Controller
         foreach ($request->productos as $pro) {
             $det = new DetalleCompra();
             $det->compra = $compra->Id;
-            $det->producto = (int)$pro["Id"];
-            $det->price = (double)$pro["Precio"];
-            // dd($pro);
-            $det->cant = (int)$pro["cantidad"];
+            $det->producto = (int)$pro["Id"]; // Producto ID
+            $det->price = (double)$pro["Precio"]; // Valor total
+
+            $det->cant = (int)$pro["cantidad"]; // Cantidad
             $det->save();
-            $cantidadAnterior = Producto::find($det->producto);
-            // $id = DB::table('producto')->latest('Id')->first();
-            // dd($id->Id);
-            $nuevaExistencia = (int)$cantidadAnterior["Existencias"]-(int)$det->cant;
+
+            $cantidadAnterior = Producto::find($det->producto); //Ultima existencia
+            $ultimaExistencia = (int)$cantidadAnterior["Existencias"];
+            $nuevaExistencia = $ultimaExistencia+(int)$det->cant;
             DB::table('producto')->where('Id', $det->producto)->update(['Existencias'=> $nuevaExistencia]);
+
+            $mov = new Movimiento();
+            $mov->producto = $det->producto;
+            $mov->Cantidad = $det->cant;
+            $mov->Ultima_existencia = $nuevaExistencia;
+            $mov->Precio = $det->price;
+
+            if (count(Movimiento::get()) == 0) {
+                $mov->Ultimo_costo = $det->price*$nuevaExistencia;
+            } else {
+                $PrecioAnterior = DB::table('movimiento')->latest('Id')->first();
+                $mov->Ultimo_costo = $PrecioAnterior->Ultimo_costo+$det->price;
+            }
+
+            $mov->Costo = $mov->Ultimo_costo / $nuevaExistencia;
+            $mov->descripcion = 'Compra';
+
+            $mov->save();
         }
     }
 
@@ -107,7 +126,7 @@ class DetalleCompraController extends Controller
         $id = $request->Id;
 
         $compra = new Compra();
-        // dd($request->compra["condicion"]);
+
         $compra->exists = true;
         $compra->Id = $request->compra["Id"];
         $compra->condiciones = $request->compra["condicion"];
@@ -117,16 +136,6 @@ class DetalleCompraController extends Controller
         $compra->afectas = $request->compra["total"];
         $compra->registrado_por = $usuario;
         $compra->proveedor = $request->compra["proveedor"];
-
-        // $compras = Compras::where(['Id'=>$compra->Id]);
-        // $detalles = DetalleCompra::where(['compra'=>$compra->Id]);
-        // dd($compras, $detalles);
-        // $det = DB::table('detalle_compra')->where(['Id'=>$request->Id])->first();
-        // $pro = DB::table('producto')->where(['Id'=>$det->producto])->first();
-
-        // $cantidadAnterior = $pro->Existencias;
-        // $nuevaExistencia = $cantidadAnterior+(int)$det->cant;
-        // DB::table('producto')->where('Id', $pro->Id)->update(['Existencias'=> $nuevaExistencia]);
 
         DB::table('detalle_compra')->where(['compra'=>$compra->Id])->delete();
         DB::table('compra')->where(['Id'=>$compra->Id])->delete();
@@ -145,7 +154,6 @@ class DetalleCompraController extends Controller
             $det = new DetalleCompra();
             $det->exists = true;
             $det->Id = $id;
-            // dd($det->Id);
             $det->compra = $compra->Id;
             $det->producto = (int)$pro["Id"];
             $det->price = (double)$pro["Precio"];
@@ -153,7 +161,6 @@ class DetalleCompraController extends Controller
 
             DB::table('producto')->where(['Id'=>$det->producto])->update(['Existencias'=>$pro["Existencias"]]);
 
-            // $det->save();
             DetalleCompra::create([
                 'Id'=>$det->Id,
                 'compra'=>$det->compra,
@@ -161,10 +168,25 @@ class DetalleCompraController extends Controller
                 'cant'=>$det->cant,
                 'price'=>$det->price,
             ]);
-        }
-        // $compra->save();
 
-        // $compra = DB::table('compra')->latest('Id')->first();
+            $mov = new Movimiento();
+            $mov->producto = $det->producto;
+            $mov->Cantidad = $det->cant;
+            $mov->Ultima_existencia = $pro["Existencias"];
+            $mov->Precio = $det->price;
+
+            if (count(Movimiento::get()) == 0) {
+                $mov->Ultimo_costo = $det->price*$pro["Existencias"];
+            } else {
+                $PrecioAnterior = DB::table('movimiento')->latest('Id')->first();
+                $mov->Ultimo_costo = $PrecioAnterior->Ultimo_costo+$det->price;
+            }
+
+            $mov->Costo = $mov->Ultimo_costo / $pro["Existencias"];
+            $mov->descripcion = 'Compra';
+
+            $mov->save();
+        }
     }
 
     /**
@@ -173,15 +195,6 @@ class DetalleCompraController extends Controller
      * @param  \App\Models\DetalleCompra  $detalleCompra
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DetalleCompra $detalleCompra)
-    {
-        try {
-            DetalleCompra::where('Id', $detalleCompra->Id)->dd();
-            return response()->json(['mensaje'=>'correcto']);
-        } catch (\Throwable $th) {
-            return response()->json(['mensaje'=>'fallido', 'razon'=>$th->getMessage()]);
-        }
-    }
 
     public function eliminar(Request $request)
     {
@@ -189,7 +202,7 @@ class DetalleCompraController extends Controller
             $det = DB::table('detalle_compra')->where(['Id'=>$request->Id])->first();
             $pro = DB::table('producto')->where(['Id'=>$det->producto])->first();
             $cantidadAnterior = $pro->Existencias;
-            $nuevaExistencia = $cantidadAnterior+(int)$det->cant;
+            $nuevaExistencia = $cantidadAnterior-(int)$det->cant;
             DB::table('producto')->where('Id', $pro->Id)->update(['Existencias'=> $nuevaExistencia]);
             DetalleCompra::where('Id', $request->Id)->delete();
             return response()->json(['mensaje'=>'correcto']);
